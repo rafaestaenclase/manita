@@ -45,13 +45,18 @@ class UserController {
 
     // Método para obtener un usuario por su ID
     public function getUserById($userId) {
-        $query = "SELECT * FROM users WHERE id = :id";
+        if (is_numeric($userId["id"])) {
 
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $userId);
-        $stmt->execute();
+            $query = "SELECT id, name, subname, email FROM users WHERE id = :id";
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':id', $userId["id"]);
+            $stmt->execute();
+
+            echo json_encode($stmt->fetch(PDO::FETCH_ASSOC));
+        } else {
+            echo json_encode(["error" => "User ID must be a number."]);
+        }
     }
 }
 

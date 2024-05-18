@@ -1,20 +1,15 @@
-class User {
+const SERVERIP = 'http://localhost:8080/backend'; // Asegúrate de ajustar el IP del servidor si es necesario
 
-    //EJEMPLOS NO FUNCIONALES
-    login(userName, password) {
-		return new Promise((resolve, reject) => {
+export default class User {
+    constructor() {
+        // Aquí puedes inicializar propiedades de la clase si es necesario
+    }
+
+    getUserById(userId) {
+        return new Promise((resolve, reject) => {
             try {
-            	if (userName.length < 4 || userName.length > 20) {
-				    throw new Error('Username must be between 4 and 20 characters in length.');
-				}
-
-				if (password.length < 4 || password.length > 20) {
-				    throw new Error('Password must be between 4 and 20 characters in length.');
-				}
-
                 const userData = {
-                    name: userName,
-                    password: password
+                    id: userId
                 };
 
                 const config = {
@@ -23,20 +18,23 @@ class User {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        userData: userData,
-                        uri: 'loginUser'
+                        values: userData,
+                        uri: 'getUserById'
                     }),
                 };
 
-                fetch(SERVERIP + "/public/index.php", config)
-                    .then(response => response.json())
+                fetch(`${SERVERIP}/public/index.php`, config)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
                     .then(data => {
                         if (typeof data === "object") {
-                        	document.cookie = "userId=" + data.UserID + ";expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/;";
-                        	document.cookie = "loginToken=" + data.LoginToken + ";expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/;";
-                    		resolve("successful");
+                            resolve(data);
                         } else {
-                        	throw new Error(data);
+                            throw new Error(data);
                         }
                     })
                     .catch(error => {
@@ -50,37 +48,5 @@ class User {
         });
     }
 
-    isLogged() {
-		return new Promise((resolve, reject) => {
-            try {
-                const config = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        loginCookies: getLoginCookies(),
-                        uri: 'isLogged'
-                    }),
-                };
-
-                fetch(SERVERIP + "/public/index.php", config)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data == "successful") {
-                        	resolve(data);
-                        } else {
-                        	resolve("notLogged");
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        reject(error);
-                    });
-            } catch (error) {
-                console.error(error.message);
-                reject(error);
-            }
-        });
-    }
+    // Puedes agregar más métodos relacionados con el usuario aquí
 }
