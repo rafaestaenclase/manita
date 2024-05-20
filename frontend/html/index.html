@@ -2,44 +2,148 @@
 <html>
 <head>
     <title>Ejemplo de Clase User</title>
+    <script type="text/javascript" src="./../js/databaseConfig.js"></script>
     <script type="module">
-        import User from './../js/User.js';
 
+    	
         document.addEventListener('DOMContentLoaded', () => {
-            const user = new User();
 
-            const userIdInput = document.getElementById('userId');
-            const searchButton = document.getElementById('searchButton');
-            const userList = document.getElementById('userList');
+        	//getUserById
+            document.getElementById('searchButton').addEventListener('click', () => {
+            	const userList = document.getElementById('userList');
+                const userId = parseInt(document.getElementById('userId').value); // Convertir a número
 
-            searchButton.addEventListener('click', () => {
-                const userId = parseInt(userIdInput.value); // Convertir a número
-                if (!isNaN(userId)) {
-                    // Limpiar la lista antes de realizar la búsqueda
-                    userList.innerHTML = '';
+                // Limpiar la lista antes de realizar la búsqueda
+                userList.innerHTML = '';
+                // Realizar la búsqueda del usuario por ID
+			    const values = {
+			        id: userId
+			    };
 
-                    // Realizar la búsqueda del usuario por ID
-                    user.getUserById(userId)
-                        .then(userData => {
-                            // Crear elementos de lista para mostrar los datos del usuario
-                            const listItem = document.createElement('li');
-                            listItem.textContent = JSON.stringify(userData);
-                            userList.appendChild(listItem);
-                        })
-                        .catch(error => {
-                            console.error('Error al buscar usuario:', error);
-                        });
-                } else {
-                    console.error('ID de usuario no válido.');
-                }
+                callDatabase("getUserById", values)
+                    .then(userData => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = JSON.stringify(userData);
+                        userList.appendChild(listItem);
+                    })
+                    .catch(error => {
+                        console.error('Error al buscar usuario:', error);
+                    });
             });
+
+        
+            //createUser
+            document.getElementById('createUserForm').addEventListener('submit', function(event) {
+	            event.preventDefault(); // Prevent form submission
+
+	            const form = event.target;
+	            const formData = new FormData(form);
+	            const userData = {};
+	            formData.forEach((value, key) => {
+	                userData[key] = value;
+	            });
+	            console.log(userData);
+	            callDatabase("createUser", userData)
+	                .then(response => {
+	                    document.getElementById('result').innerText = 'User created: ' + JSON.stringify(response);
+	                })
+	                .catch(error => {
+	                    document.getElementById('result').innerText = 'Error creating user: ' + error;
+	                });
+	        });
+
+
+	        document.getElementById('autoCompleteForm').addEventListener('click', () => {
+	            const randomName = ['John', 'Jane', 'Alice', 'Bob', 'Charlie'];
+	            const randomSubname = ['Doe', 'Smith', 'Johnson', 'Brown', 'Williams'];
+	            const randomEmailProviders = ['example.com', 'mail.com', 'test.com', 'demo.com'];
+	            const randomLanguage = ['en', 'es', 'fr', 'de', 'it'];
+
+	            const name = randomName[Math.floor(Math.random() * randomName.length)];
+	            const subname = randomSubname[Math.floor(Math.random() * randomSubname.length)];
+	            const email = name.toLowerCase() + '.' + subname.toLowerCase() + '@' + randomEmailProviders[Math.floor(Math.random() * randomEmailProviders.length)];
+	            const telephone = '123-456-7890';
+	            const dob = new Date(+(new Date()) - Math.floor(Math.random()*10000000000)).toISOString().split('T')[0]; // Random date
+	            const address = '123 Main St';
+	            const avatar = 'https://via.placeholder.com/150';
+	            const description = 'This is a random description.';
+	            const language = randomLanguage[Math.floor(Math.random() * randomLanguage.length)];
+
+	            document.getElementById('name').value = name;
+	            document.getElementById('subname').value = subname;
+	            document.getElementById('dob').value = dob;
+	            document.getElementById('telephone').value = telephone;
+	            document.getElementById('email').value = email;
+	            document.getElementById('password').value = 'password123';
+	            document.getElementById('address').value = address;
+	            document.getElementById('avatar').value = avatar;
+	            document.getElementById('description').value = description;
+	            document.getElementById('language').value = language;
+	        });
+
+
+
+
+
+
+
+
+
+
+
         });
     </script>
 </head>
 <body>
-    <label for="userId">ID de Usuario:</label>
-    <input type="number" id="userId" name="userId">
-    <button id="searchButton">Buscar</button>
-    <ul id="userList"></ul>
+	<h1>GetUserById</h1>
+	    <label for="userId">ID de Usuario:</label>
+	    <input type="number" id="userId" name="userId">
+	    <button id="searchButton">Buscar</button>
+	    <ul id="userList"></ul>
+
+
+
+    <h1>Create User</h1>
+	    <form id="createUserForm">
+	        <label for="name">Name:</label>
+	        <input type="text" id="name" name="name" minlength="2" maxlength="50" required>
+	        <br>
+	        <label for="subname">Subname:</label>
+	        <input type="text" id="subname" name="subname">
+	        <br>
+	        <label for="dob">Date of Birth:</label>
+	        <input type="date" id="dob" name="dob" required>
+	        <br>
+	        <label for="telephone">Telephone:</label>
+	        <input type="text" id="telephone" name="telephone">
+	        <br>
+	        <label for="email">Email:</label>
+	        <input type="email" id="email" name="email" required>
+	        <br>
+	        <label for="password">Password:</label>
+	        <input type="password" id="password" name="password" minlength="6" maxlength="30" required>
+	        <br>
+	        <label for="address">Address:</label>
+	        <input type="text" id="address" name="address">
+	        <br>
+	        <label for="avatar">Avatar URL:</label>
+	        <input type="text" id="avatar" name="avatar">
+	        <br>
+	        <label for="description">Description:</label>
+	        <textarea id="description" name="description"></textarea>
+	        <br>
+	        <label for="language">Language:</label>
+	        <input type="text" id="language" name="language">
+	        <br>
+	        <button type="submit">Create User</button>
+	        <button id="autoCompleteForm" type="button">Auto Complete</button>
+	    </form>
+	    <div id="result"></div>
+
+
+
+
+
+
 </body>
 </html>

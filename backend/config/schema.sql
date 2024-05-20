@@ -1,15 +1,15 @@
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    subname VARCHAR(255),
-    dob DATE,
-    telephone VARCHAR(20),
-    email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    login_hash VARCHAR(255),
+    name VARCHAR(50) NOT NULL,
+    subname VARCHAR(100),
+    dob DATE NOT NULL,
+    telephone VARCHAR(9) UNIQUE,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(30) NOT NULL,
+    login_hash VARCHAR(255) UNIQUE,
     address VARCHAR(255),
     avatar VARCHAR(255),
-    `desc` TEXT,
+    description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     role ENUM('user', 'admin') DEFAULT 'user',
@@ -20,7 +20,7 @@ CREATE TABLE users (
 
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

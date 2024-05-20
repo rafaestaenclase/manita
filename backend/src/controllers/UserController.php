@@ -8,16 +8,28 @@ class UserController {
     }
 
     // Método para crear un nuevo usuario
-    public function createUser($userData) {
-        $query = "INSERT INTO users (name, subname, dob, telephone, email, password, address, avatar, `desc`, role, prestige, language, created_at, updated_at, is_verified) 
-                  VALUES (:name, :subname, :dob, :telephone, :email, :password, :address, :avatar, :desc, :role, :prestige, :language, NOW(), NOW(), 0)";
+    public function createUser($values) {
+        // Filtrar los valores proporcionados por el usuario
+        $allowedKeys = ['name', 'subname', 'dob', 'telephone', 'email', 'password', 'address', 'avatar', 'desc', 'language'];
+        $filteredValues = array_intersect_key($values, array_flip($allowedKeys));
 
+        // Construir la consulta SQL dinámicamente
+        $columns = implode(', ', array_keys($filteredValues));
+        $params = ':' . implode(', :', array_keys($filteredValues));
+
+        // Query SQL para la inserción
+        $query = "INSERT INTO users ($columns) VALUES ($params)";
+
+        
+        // Preparar y ejecutar la consulta
         $stmt = $this->db->prepare($query);
-        $stmt->execute($userData);
+        $stmt->execute($filteredValues);
 
+        // Obtener el ID del usuario insertado
         $userId = $this->db->lastInsertId();
 
-        return $userId;
+
+        echo json_encode($userId);
     }
 
     // Método para actualizar los datos de un usuario existente
@@ -33,24 +45,24 @@ class UserController {
     }
 
     // Método para eliminar un usuario
-    public function deleteUser($userId) {
+    public function deleteUser($values) {
         $query = "DELETE FROM users WHERE id = :id";
 
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $userId);
+        $stmt->bindParam(':id', $values);
         $stmt->execute();
 
         return $stmt->rowCount() > 0;
     }
 
     // Método para obtener un usuario por su ID
-    public function getUserById($userId) {
-        if (is_numeric($userId["id"])) {
+    public function getUserById($values) {
+        if (is_numeric($values["id"])) {
 
             $query = "SELECT id, name, subname, email FROM users WHERE id = :id";
 
             $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':id', $userId["id"]);
+            $stmt->bindParam(':id', $values["id"]);
             $stmt->execute();
 
             echo json_encode($stmt->fetch(PDO::FETCH_ASSOC));

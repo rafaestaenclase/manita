@@ -26,7 +26,9 @@ $router->add('/', function() {
 });
 
 // Make sure the class name matches the controller file
+$router->add('createUser', 'UserController@createUser');
 $router->add('getUserById', 'UserController@getUserById');
+
 
 // Run the router if data is provided
 if ($data != null) {
