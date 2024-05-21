@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS user_post_challenge;
+DROP TABLE IF EXISTS user_post_like;
+DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
