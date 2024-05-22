@@ -5,7 +5,32 @@
     <script type="text/javascript" src="./../js/databaseConfig.js"></script>
     <script type="module">
 
+    	
         document.addEventListener('DOMContentLoaded', () => {
+
+        	//getUserById
+            document.getElementById('searchButton').addEventListener('click', () => {
+            	const userList = document.getElementById('userList');
+                const userId = parseInt(document.getElementById('userId').value); // Convertir a número
+
+                // Limpiar la lista antes de realizar la búsqueda
+                userList.innerHTML = '';
+                // Realizar la búsqueda del usuario por ID
+			    const values = {
+			        id: userId
+			    };
+
+                callDatabase("getUserById", values)
+                    .then(userData => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = JSON.stringify(userData);
+                        userList.appendChild(listItem);
+                    })
+                    .catch(error => {
+                        console.error('Error al buscar usuario:', error);
+                    });
+            });
+
         
             //createUser
             document.getElementById('createUserForm').addEventListener('submit', function(event) {
@@ -103,6 +128,11 @@
     </script>
 </head>
 <body>
+	<h1>GetUserById</h1>
+	    <label for="userId">ID de Usuario:</label>
+	    <input type="number" id="userId" name="userId">
+	    <button id="searchButton">Buscar</button>
+	    <ul id="userList"></ul>
 
     <h1>Create User</h1>
 		<form id="createUserForm">

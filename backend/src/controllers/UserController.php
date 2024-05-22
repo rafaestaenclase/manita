@@ -132,7 +132,7 @@ class UserController {
 
                     if ($this->updateLoginHash($result)) {
 
-                        $query = "SELECT id, name, subname, email, login_hash FROM users WHERE id = :id";
+                        $query = "SELECT id, login_hash FROM users WHERE id = :id";
 
                         $stmt = $this->db->prepare($query);
                         $stmt->bindParam(':id', $result["id"]);

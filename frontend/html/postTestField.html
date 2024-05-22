@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ejemplo de Clase User</title>
+    <script type="text/javascript" src="./../js/databaseConfig.js"></script>
+    <script type="module">
+
+    	
+        document.addEventListener('DOMContentLoaded', () => {
+
+        	function getCookie(name) {
+		        const value = `; ${document.cookie}`;
+		        const parts = value.split(`; ${name}=`);
+		        if (parts.length === 2) return parts.pop().split(';').shift();
+		    }
+
+		    document.getElementById('loggedInUser').innerText = "Logged:" + getCookie('user_id');
+
+		    document.getElementById('createPostForm').addEventListener('submit', function(event) {
+		        event.preventDefault(); // Prevent form submission
+
+		        const form = event.target;
+		        const formData = new FormData(form);
+		        const postData = {};
+		        formData.forEach((value, key) => {
+		            postData[key] = value;
+		        });
+
+		        postData["userId"] = getCookie('user_id');
+
+	        	console.log(postData);
+
+		        callDatabase("createPost", postData)
+		            .then(response => {
+		                document.getElementById('createResult').innerText = 'Post created: ' + JSON.stringify(response);
+		            })
+		            .catch(error => {
+		                document.getElementById('createResult').innerText = 'Error creating post: ' + error;
+		            });
+		    });
+
+		    document.getElementById('autoCompleteForm').addEventListener('click', function() {
+		        document.getElementById('categoryId').value = 1; // Example category_id
+		        document.getElementById('title').value = 'Example Title';
+		        document.getElementById('body').value = 'This is an example body text.';
+		        document.getElementById('imageUrl').value = 'https://example.com/image.jpg';
+		        document.getElementById('reward').value = 'Example reward';
+		        document.getElementById('address').value = '123 Example St, Example City';
+		        document.getElementById('language').value = 'en';
+		    });
+
+
+
+
+
+
+
+
+
+        });
+    </script>
+</head>
+<body>
+
+	<h1>Create Post</h1>
+	<form id="createPostForm">
+	    <div id="loggedInUserInfo">
+	        <p>Logged in as: <span id="loggedInUser"></span></p>
+	    </div>
+	    <br>
+	    <label for="category_id">Category ID:</label>
+	    <input type="number" id="categoryId" name="categoryId" required>
+	    <br>
+	    <label for="title">Title:</label>
+	    <input type="text" id="title" name="title" minlength="1" maxlength="60" required>
+	    <br>
+	    <label for="body">Body:</label>
+	    <textarea id="body" name="body" required></textarea>
+	    <br>
+	    <label for="image_url">Image URL:</label>
+	    <input type="url" id="imageUrl" name="imageUrl" maxlength="500">
+	    <br>
+	    <label for="reward">Reward:</label>
+	    <input type="text" id="reward" name="reward" maxlength="255">
+	    <br>
+	    <label for="address">Address:</label>
+	    <input type="text" id="address" name="address" maxlength="500">
+	    <br>
+	    <label for="language">Language:</label>
+	    <input type="text" id="language" name="language" maxlength="10">
+	    <br>
+	    <button type="submit">Create Post</button>
+	    <button id="autoCompleteForm" type="button">Auto Complete</button>
+	</form>
+	<div id="createResult"></div>
+
+
+</body>
+</html>

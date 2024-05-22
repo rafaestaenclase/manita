@@ -22,14 +22,8 @@ function callDatabase(uri, values) {
                     return response.json();
                 })
                 .then(data => {
-                    //if (typeof data === "object") {
-                    	console.log(data);
-                        resolve(data);
-                        /*
-                    } else {
-                        throw new Error(data);
-                    }
-                    */
+                	console.log(data);
+                    resolve(data);
                 })
                 .catch(error => {
                     console.error(error);

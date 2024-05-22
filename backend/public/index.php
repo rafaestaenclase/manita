@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once './../config/database.php';
 require_once './Routing.php';
 require_once './../src/controllers/UserController.php';
+require_once './../src/controllers/PostController.php';
 
 // Decode the JSON input
 $data = json_decode(file_get_contents('php://input'), true);
@@ -29,6 +30,9 @@ $router->add('/', function() {
 $router->add('createUser', 'UserController@createUser');
 $router->add('getUserById', 'UserController@getUserById');
 $router->add('login', 'UserController@login');
+
+
+$router->add('createPost', 'PostController@createPost');
 
 
 // Run the router if data is provided
