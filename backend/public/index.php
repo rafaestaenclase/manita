@@ -1,9 +1,13 @@
 <?php
+
+
 // Set headers for CORS
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Credentials: true");
+
+session_start();
 
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -30,10 +34,23 @@ $router->add('/', function() {
 $router->add('createUser', 'UserController@createUser');
 $router->add('getUserById', 'UserController@getUserById');
 $router->add('login', 'UserController@login');
+$router->add('checkLoginStatus', 'UserController@checkLoginStatus');
 
 
-$router->add('createPost', 'PostController@createPost');
 
+
+
+
+//Secured action. Loggined needed.
+if ($data !== null && isset($data["values"]) && isset($data["values"]["loginHash"])) {
+	$router->run('checkLoginStatus', $db, $data["values"]);
+
+	if ($_SESSION['logged_in']) {
+		$router->add('createPost', 'PostController@createPost');
+	} else {
+		echo json_encode("User not logged");
+	}
+}
 
 // Run the router if data is provided
 if ($data != null) {
@@ -42,6 +59,5 @@ if ($data != null) {
 } else {
     echo json_encode(["error" => "No input data provided."]);
 }
-
 
 ?>

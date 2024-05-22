@@ -81,14 +81,6 @@
 	            document.getElementById('language').value = language;
 	        });
 
-			// Función para establecer una cookie
-			function setCookie(name, value, days) {
-			    const date = new Date();
-			    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-			    const expires = "expires=" + date.toUTCString();
-			    document.cookie = name + "=" + value + ";" + expires + ";path=/";
-			}
-
 			// Login
 			document.getElementById('loginForm').addEventListener('submit', function(event) {
 			    event.preventDefault(); // Prevent form submission
@@ -105,8 +97,8 @@
 
 			            const { id, login_hash } = response;
 
-			            setCookie('user_id', id, 7);
-			            setCookie('login_hash', login_hash, 7); // Establece la cookie login_hash por 7 días
+			            localStorage.setItem('user_id', id);
+			            localStorage.setItem('login_hash', login_hash);
 
 			            document.getElementById('loginResult').innerText = 'Logged: ' + login_hash;
 

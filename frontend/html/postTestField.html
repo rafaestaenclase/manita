@@ -26,7 +26,8 @@
 		            postData[key] = value;
 		        });
 
-		        postData["userId"] = getCookie('user_id');
+		        postData["userId"] = localStorage.getItem('user_id');
+		        postData["loginHash"] = localStorage.getItem('login_hash');
 
 	        	console.log(postData);
 
