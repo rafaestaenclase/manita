@@ -33,7 +33,7 @@ class Router
         }
         
         // Handle case where route is not found (optional)
-        // $this->handleNotFound();
+        $this->handleNotFound();
     }
 
     // Method to run the action
@@ -69,12 +69,10 @@ class Router
     }
 
     // Optional method to handle routes not found
-    // private function handleNotFound() 
-    // {
-    //     // You can redirect to a 404 page or show an error message
-    //     http_response_code(404);
-    //     echo "404 Not Found";
-    // }
+    private function handleNotFound() 
+    {
+        echo json_encode("You don't have permission to access this resource.");
+    }
 }
 
 ?>

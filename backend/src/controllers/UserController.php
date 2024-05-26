@@ -160,9 +160,9 @@ class UserController {
 
     public function checkLoginStatus($values) {
 
-        if (isset($values["userId"]) && isset($values["loginHash"])) {
-            $userId = $values["userId"];
-            $loginHash = $values["loginHash"];
+        if (isset($values["loggedUserId"]) && isset($values["loggedHash"])) {
+            $userId = $values["loggedUserId"];
+            $loginHash = $values["loggedHash"];
 
             $query = "SELECT id FROM users WHERE id = :user_id and login_hash = :login_hash";
 
@@ -175,18 +175,15 @@ class UserController {
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($result) {
-                    // El login_hash es válido, devolver el ID del usuario
-                    $_SESSION['logged_in'] = true;
+                    return true;
                 } else {
-                    // El login_hash no es válido
-                    $_SESSION['logged_in'] = false;
+                    return false;
                 }
 
             } catch (PDOException $e) {
                 return ["error" => "Error en la base de datos: " . $e->getMessage()];
             }
         } else {
-            // El usuario no proporcionó un loginHash
             return ["error" => "Missing loginHash parameter."];
         }
 

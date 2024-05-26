@@ -7,8 +7,6 @@ header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Credentials: true");
 
-session_start();
-
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     header("HTTP/1.1 200 OK");
@@ -37,25 +35,26 @@ $router->add('login', 'UserController@login');
 $router->add('checkLoginStatus', 'UserController@checkLoginStatus');
 
 
-
-
-
-
 //Secured action. Loggined needed.
-if ($data !== null && isset($data["values"]) && isset($data["values"]["loginHash"])) {
-	$router->run('checkLoginStatus', $db, $data["values"]);
+if ($data !== null && isset($data["values"]) && isset($data["values"]["loggedUserId"]) && isset($data["values"]["loggedHash"])) {
 
-	if ($_SESSION['logged_in']) {
+	$user = new UserController($db);
+    $isLogged = $user->checkLoginStatus($data["values"]);
+
+	if ($isLogged == true) {
 		$router->add('createPost', 'PostController@createPost');
-	} else {
-		echo json_encode("User not logged");
+		$router->add('getPostsByUserId', 'PostController@getPostsByUserId');
+		$router->add('getPostById', 'PostController@getPostById');
+		$router->add('deletePostById', 'PostController@deletePostById');
 	}
+
 }
+
 
 // Run the router if data is provided
 if ($data != null) {
     header('Content-Type: application/json');
-    $router->run($data["uri"], $db, $data["values"]);
+    $result = $router->run($data["uri"], $db, $data["values"]);
 } else {
     echo json_encode(["error" => "No input data provided."]);
 }

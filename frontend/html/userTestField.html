@@ -11,7 +11,7 @@
         	//getUserById
             document.getElementById('searchButton').addEventListener('click', () => {
             	const userList = document.getElementById('userList');
-                const userId = parseInt(document.getElementById('userId').value); // Convertir a número
+                const userId = parseInt(document.getElementById('userId').value);
 
                 // Limpiar la lista antes de realizar la búsqueda
                 userList.innerHTML = '';
@@ -34,16 +34,7 @@
         
             //createUser
             document.getElementById('createUserForm').addEventListener('submit', function(event) {
-	            event.preventDefault(); // Prevent form submission
-
-	            const form = event.target;
-	            const formData = new FormData(form);
-	            const userData = {};
-	            formData.forEach((value, key) => {
-	                userData[key] = value;
-	            });
-	            console.log(userData);
-	            callDatabase("createUser", userData)
+	            callDatabase("createUser", getFormData(event.target))
 	                .then(response => {
 	                    document.getElementById('createResult').innerText = 'User created: ' + JSON.stringify(response);
 	                })
@@ -83,22 +74,13 @@
 
 			// Login
 			document.getElementById('loginForm').addEventListener('submit', function(event) {
-			    event.preventDefault(); // Prevent form submission
-
-			    const form = event.target;
-			    const formData = new FormData(form);
-			    const userData = {};
-			    formData.forEach((value, key) => {
-			        userData[key] = value;
-			    });
-			    console.log(userData);
-			    callDatabase("login", userData)
+			    callDatabase("login", getFormData(event.target))
 			        .then(response => {
 
 			            const { id, login_hash } = response;
 
-			            localStorage.setItem('user_id', id);
-			            localStorage.setItem('login_hash', login_hash);
+			            localStorage.setItem('logged_user_id', id);
+			            localStorage.setItem('logged_hash', login_hash);
 
 			            document.getElementById('loginResult').innerText = 'Logged: ' + login_hash;
 

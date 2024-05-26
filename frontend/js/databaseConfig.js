@@ -1,5 +1,21 @@
 const SERVERIP = 'http://localhost:8080/backend';
 
+function getFormData(form) {
+    event.preventDefault();
+    const formData = new FormData(form);
+    const postData = {};
+    formData.forEach((value, key) => {
+        postData[key] = value;
+    });
+
+    if (localStorage.getItem('logged_user_id') !== null && localStorage.getItem('logged_hash') !== null) {
+        postData["loggedUserId"] = localStorage.getItem('logged_user_id');
+        postData["loggedHash"] = localStorage.getItem('logged_hash');
+    }
+
+    return postData;
+}
+
 function callDatabase(uri, values) {
     return new Promise((resolve, reject) => {
         try {

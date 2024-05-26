@@ -14,24 +14,10 @@
 		        if (parts.length === 2) return parts.pop().split(';').shift();
 		    }
 
-		    document.getElementById('loggedInUser').innerText = "Logged:" + getCookie('user_id');
+		    document.getElementById('loggedInUser').innerText = localStorage.getItem('logged_user_id');
 
 		    document.getElementById('createPostForm').addEventListener('submit', function(event) {
-		        event.preventDefault(); // Prevent form submission
-
-		        const form = event.target;
-		        const formData = new FormData(form);
-		        const postData = {};
-		        formData.forEach((value, key) => {
-		            postData[key] = value;
-		        });
-
-		        postData["userId"] = localStorage.getItem('user_id');
-		        postData["loginHash"] = localStorage.getItem('login_hash');
-
-	        	console.log(postData);
-
-		        callDatabase("createPost", postData)
+		        callDatabase("createPost", getFormData(event.target))
 		            .then(response => {
 		                document.getElementById('createResult').innerText = 'Post created: ' + JSON.stringify(response);
 		            })
@@ -51,11 +37,38 @@
 		    });
 
 
+			document.getElementById('getPostsByUserIdForm').addEventListener('submit', function(event) {
+		        callDatabase("getPostsByUserId", getFormData(event.target))
+		            .then(response => {
+		                document.getElementById('postsByUserIdResult').innerText = 'Post created: ' + JSON.stringify(response);
+		            })
+		            .catch(error => {
+		                document.getElementById('postsByUserIdResult').innerText = 'Error creating post: ' + error;
+		            });
+		    });
 
 
 
+		    document.getElementById('getPostByIdForm').addEventListener('submit', function(event) {
+		        callDatabase("getPostById", getFormData(event.target))
+		            .then(response => {
+		                document.getElementById('postByIdResult').innerText = 'Post created: ' + JSON.stringify(response);
+		            })
+		            .catch(error => {
+		                document.getElementById('postByIdResult').innerText = 'Error creating post: ' + error;
+		            });
+		    });
 
 
+		    document.getElementById('deletePostForm').addEventListener('submit', function(event) {
+		        callDatabase("deletePostById", getFormData(event.target))
+		            .then(response => {
+		                document.getElementById('deletePostResult').innerText = 'Post deleted: ' + JSON.stringify(response);
+		            })
+		            .catch(error => {
+		                document.getElementById('deletePostResult').innerText = 'Error deleting post: ' + error;
+		            });
+		    });
 
 
         });
@@ -95,6 +108,32 @@
 	</form>
 	<div id="createResult"></div>
 
+
+	<h1>Get Posts by User ID</h1>
+	<form id="getPostsByUserIdForm">
+	    <label for="userId">User ID:</label>
+	    <input type="number" id="userId" name="userId" required>
+	    <button type="submit">Get Posts</button>
+	</form>
+	<div id="postsByUserIdResult"></div>
+
+
+	<h1>Get Post by Post ID</h1>
+	<form id="getPostByIdForm">
+	    <label for="postId">Post ID:</label>
+	    <input type="number" id="postId" name="postId" required>
+	    <button type="submit">Get Post</button>
+	</form>
+	<div id="postByIdResult"></div>
+
+
+    <h1>Delete Post by Post ID</h1>
+    <form id="deletePostForm">
+        <label for="postId">Post ID:</label>
+        <input type="number" id="postId" name="postId" required>
+        <input type="submit" value="Delete Post">
+    </form>
+    <div id="deletePostResult"></div>
 
 </body>
 </html>
