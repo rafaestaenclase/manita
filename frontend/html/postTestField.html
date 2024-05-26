@@ -38,14 +38,36 @@
 
 
 			document.getElementById('getPostsByUserIdForm').addEventListener('submit', function(event) {
-		        callDatabase("getPostsByUserId", getFormData(event.target))
-		            .then(response => {
-		                document.getElementById('postsByUserIdResult').innerText = 'Post created: ' + JSON.stringify(response);
-		            })
-		            .catch(error => {
-		                document.getElementById('postsByUserIdResult').innerText = 'Error creating post: ' + error;
-		            });
-		    });
+			    event.preventDefault(); // Prevent the default form submission behavior
+			    
+			    callDatabase("getPostsByUserId", getFormData(event.target))
+			        .then(response => {
+			            var resultDiv = document.getElementById('postsByUserIdResult');
+			            const posts = response.posts;
+			            const hasMore = response.hasMore;
+			            const form = document.getElementById('getPostsByUserIdForm');
+			            const page = form.querySelector('input[id="page"]');
+			            const submitButton = form.querySelector('button[type="submit"]');
+			            const postsPerPage = 4;
+
+			            for (let i = 0; i < Math.min(postsPerPage, posts.length); i++) {
+			                const post = posts[i];
+			                const postDiv = document.createElement('div');
+			                postDiv.textContent = post.title;
+			                resultDiv.appendChild(postDiv);
+			            }
+
+			            if (hasMore) {
+			                page.value = parseInt(page.value) + 1;
+			            } else {
+			                submitButton.disabled = true;
+			            }
+			        })
+			        .catch(error => {
+			            document.getElementById('postsByUserIdResult').innerText = 'Error retrieving posts: ' + error;
+			        });
+			});
+
 
 
 
@@ -114,8 +136,10 @@
 	    <label for="userId">User ID:</label>
 	    <input type="number" id="userId" name="userId" required>
 	    <button type="submit">Get Posts</button>
+	    <input type="hidden" id="page" name="page" value="0">
 	</form>
 	<div id="postsByUserIdResult"></div>
+	
 
 
 	<h1>Get Post by Post ID</h1>
