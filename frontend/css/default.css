@@ -1,0 +1,23 @@
+* {
+    font-family: "Arimo", sans-serif;
+    box-sizing: border-box;
+    font-weight: bold;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    height: calc(100vh - 40px);
+}
+
+.textColor {
+    color: #4D4D4D;
+}
+
+.subtextColor {
+    color: #999999;
+}
+
+.backgoundColor {
+	background-color: #F1F1F1;
+}

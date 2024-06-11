@@ -1,7 +1,5 @@
 DROP TABLE IF EXISTS user_post_challenge;
-DROP TABLE IF EXISTS user_post_like;
 DROP TABLE IF EXISTS posts;
-DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
@@ -10,55 +8,55 @@ CREATE TABLE users (
     subname VARCHAR(100),
     dob DATE NOT NULL,
     telephone VARCHAR(9) UNIQUE,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(30) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     login_hash VARCHAR(255) UNIQUE,
-    address VARCHAR(255),
+    zip INT(10),
     avatar VARCHAR(255),
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     role ENUM('user', 'admin') DEFAULT 'user',
     is_verified BOOLEAN DEFAULT 0,
-    prestige INT DEFAULT 0,
     language VARCHAR(10)
-);
-
-CREATE TABLE categories (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    default_name VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    category_id INT NOT NULL,
     title VARCHAR(60) NOT NULL,
     body TEXT,
     image_url VARCHAR(500),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     reward VARCHAR(255),
-    prestige INT DEFAULT 0,
-    address VARCHAR(500),
     language VARCHAR(10),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE user_post_challenge (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    post_id INT NOT NULL,
+    `date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    state ENUM('request', 'accepted', 'finished') NOT NULL,
+    helper_feedback TEXT,
+    helper_valoration ENUM('good', 'bad') NOT NULL,
+    recipient_feedback TEXT,
+    recipient_valoration ENUM('good', 'bad') NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (category_id) REFERENCES categories(id)
+    FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    category_id INT NOT NULL,
     title VARCHAR(60) NOT NULL,
     description TEXT,
     image_url VARCHAR(500),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     event_date DATETIME NOT NULL,
-    location VARCHAR(500),
     language VARCHAR(10),
     max_participants INT,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (category_id) REFERENCES categories(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE event_participants (
@@ -69,23 +67,3 @@ CREATE TABLE event_participants (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE user_post_like (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    post_id INT NOT NULL,
-    `date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (post_id) REFERENCES posts(id)
-);
-
-CREATE TABLE user_post_challenge (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    post_id INT NOT NULL,
-    `date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    state ENUM('request', 'accepted', 'finished') NOT NULL,
-    helper_feedback TEXT,
-    recipient_feedback TEXT,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (post_id) REFERENCES posts(id)
-);

@@ -1,0 +1,30 @@
+#calendar {
+    height: 40vh;
+    border-radius: 25px;
+    padding: 20px;
+}
+
+button {
+    border-radius: 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    width: calc(50% - 10px);
+    height: calc(50% - 15px);
+    margin: 0;
+    padding: 10px;
+}
+
+button img {
+    width: 30px;
+}
+
+.bottom-section {
+    padding-top: 15px;
+    display: flex;
+    height: calc(55vh - 15px);
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
