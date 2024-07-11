@@ -5,57 +5,70 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    subname VARCHAR(100),
-    dob DATE NOT NULL,
     telephone VARCHAR(9) UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    uuid VARCHAR(255) NOT NULL,
     login_hash VARCHAR(255) UNIQUE,
-    zip INT(10),
     avatar VARCHAR(255),
-    description TEXT,
+    city_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    role ENUM('user', 'admin') DEFAULT 'user',
-    is_verified BOOLEAN DEFAULT 0,
-    language VARCHAR(10)
+    FOREIGN KEY (city_id) REFERENCES cities(id)
+);
+
+CREATE TABLE province (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE cities (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    province_id INT,
+    FOREIGN KEY (province_id) REFERENCES province(id)
 );
 
 CREATE TABLE posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     title VARCHAR(60) NOT NULL,
-    body TEXT,
-    image_url VARCHAR(500),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    reward VARCHAR(255),
-    language VARCHAR(10),
+    body VARCHAR(255),
+    neighborhood VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE user_post_challenge (
+CREATE TABLE user_post_state (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     post_id INT NOT NULL,
-    `date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    state ENUM('request', 'accepted', 'finished') NOT NULL,
-    helper_feedback TEXT,
-    helper_valoration ENUM('good', 'bad') NOT NULL,
-    recipient_feedback TEXT,
-    recipient_valoration ENUM('good', 'bad') NOT NULL,
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    state ENUM('accepted', 'canceled', 'finished') NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (post_id) REFERENCES posts(id)
 );
+
+
+CREATE TABLE post_feedback (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    post_id INT NOT NULL,
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_role ENUM('helper', 'recipient') NOT NULL,
+    feedback TEXT,
+    valoration ENUM('good', 'bad') NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (post_id) REFERENCES posts(id),
+    UNIQUE KEY unique_user_post_role (user_id, post_id, user_role)
+);
+
 
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     title VARCHAR(60) NOT NULL,
     description TEXT,
-    image_url VARCHAR(500),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    event_date DATETIME NOT NULL,
-    language VARCHAR(10),
-    max_participants INT,
+    event_date DATETIME NOT NULL
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
