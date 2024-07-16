@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+
+		@font-face {
+			font-family: 'LeagueSpartan';
+			src: url('./../fonts/LeagueSpartan.ttf') format('truetype');
+			font-style: normal;
+			font-weight: bold;
+		}
+
+		* {
+			font-size: 25px;
+			font-family: LeagueSpartan;
+			color: #4D4D4D;
+			margin: 0px;
+			padding: 0px;
+		}
+
+		.backgroundGreen{
+			background: #1FDD76;
+		}
+
+		h1 {
+			font-size: 45px;
+		}
+
+		.container {
+		    width: calc(100% - 40px);
+			padding: 10px 20px;
+			display: flex;
+			flex-wrap: wrap;
+			align-content: center;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		.container > * {
+			padding: 5px 0px;
+		}
+
+		.box {
+			border: 2px solid #4D4D4D;
+			border-radius: 12px;
+			background: #F1F1F1;
+			padding: 10px;
+			margin: 10px 0px;
+		}
+
+		#nav {
+			position: absolute;
+			bottom: 0px;
+			border-top: 2px solid #4D4D4D;
+		}
+
+		button {
+			width: 45%;
+			height: 100px;
+		}
+		
+	</style>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<body>
+<form id="createUserForm">
+	<div id="register_0">
+		<div id="header" class="container backgroundGreen">
+			<h1>¡HOLA!</h1>
+			<br>
+			<h2>NOS ALEGRA CONOCERTE :)</h2>
+		</div>
+		<div class="container">
+			<label for="name">¿CÓMO TE LLAMAS?</label>
+			<br>
+			<input type="text" id="name" class="box" name="name" placeholder="NOMBRE Y APELLIDO" minlength="2" maxlength="50" required>
+		</div>
+		<br>
+		<div id="nav" class="container">
+			<button class="box" type="submit"></button>
+			<button class="box" type="submit">Create User</button>
+		</div>
+	</div>
+
+
+
+</form>
+</body>
+</html>
