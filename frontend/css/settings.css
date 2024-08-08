@@ -1,0 +1,14 @@
+button {
+    height: 150px;
+}
+
+#container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#nav {
+    border-top: none;
+}
