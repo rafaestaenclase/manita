@@ -7,22 +7,55 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="./../css/default.css" />
-    <link rel="stylesheet" type="text/css" href="./../css/board.css" />
 </head>
 <body>
-    <div id="header" class="backgroundBlue">TABLÓN</div>
+    <div id="header">MAN!TA</div>
 
 
     <div id="container">
-        <button class="post" onclick="location.href='./viewPost.html?postId=12'">
+        <div class="post">
+
+            <div class="userButton" onclick="location.href='./profile.html?userId=12'">
+                <span class="userImage"></span>
+                <span>JOSÉ FANCISCO</span>
+            </div>
+
             <span>AYUDA CON UNA BICI</span>
+
+            <p id="postBody">
+                Estoy buscando a alguien que pueda ayudarme con la reparación de mi bicicleta. Uso mi bici diariamente para ir al trabajo y hacer recados, pero recientemente tuve una avería.
+            </p>
+
             <span>ZARAMAGA</span>
-        </button>
+
+            <button id="contacts">CONTACTAR</button>
+
+        </div>
+
+        <div class="post">
+
+            <div class="userButton" onclick="location.href='./profile.html?userId=12'">
+                <span class="userImage"></span>
+                <span>JOSÉ FANCISCO</span>
+            </div>
+
+            <span>AYUDA CON UNA BICI</span>
+
+            <p id="postBody">
+                Estoy buscando a alguien que pueda ayudarme con la reparación de mi bicicleta. Uso mi bici diariamente para ir al trabajo y hacer recados, pero recientemente tuve una avería.
+            </p>
+
+            <span>ZARAMAGA</span>
+
+            <button id="contacts">CONTACTAR</button>
+
+        </div>
     </div>
 
     <div id="nav">
-        <button onclick="location.href='./home.html'">ATRÁS</button>
-        <button class="invisible"></button>
+        <span id="navBackground"></span>
+        <button class="yellowButton" onclick="location.href='./createPost.html'">SOLICITAR AYUDA</button>
+        <button class="greenButton" onclick="location.href='./profile.html'">YO</button>
     </div>
 </body>
 </html>

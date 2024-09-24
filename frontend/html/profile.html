@@ -16,15 +16,37 @@
 
 
     <div id="container">
-        <button class="post" onclick="location.href='./viewPost.html?postId=12'">
+        <div class="post">
             <span>AYUDA CON UNA BICI</span>
+
+            <p id="postBody">
+                Estoy buscando a alguien que pueda ayudarme con la reparación de mi bicicleta. Uso mi bici diariamente para ir al trabajo y hacer recados, pero recientemente tuve una avería.
+            </p>
+
             <span>ZARAMAGA</span>
-        </button>
+
+            <button id="contacts">FINALIZAR</button>
+
+        </div>
+
+        <div class="post">
+
+            <span>AYUDA CON UNA BICI</span>
+
+            <p id="postBody">
+                Estoy buscando a alguien que pueda ayudarme con la reparación de mi bicicleta. Uso mi bici diariamente para ir al trabajo y hacer recados, pero recientemente tuve una avería.
+            </p>
+
+            <span>ZARAMAGA</span>
+
+            <button id="contacts">FINALIZAR</button>
+
+        </div>
     </div>
 
     <div id="nav">
-        <button onclick="location.href='./home.html'">ATRÁS</button>
-        <button class="invisible"></button>
+        <button class="redButton" onclick="javascript:history.back()">ATRÁS</button>
+        <button onclick="location.href='./settings.html'" class="blueButton">AJUSTES</button>
     </div>
 </body>
 </html>
