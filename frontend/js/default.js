@@ -84,12 +84,27 @@ document.querySelectorAll('a, button').forEach(function(element) {
 });
 
 
+function setCookie(name, value) {
+    const date = new Date();
+    
+    // Establecer la fecha de expiración muy lejana (por ejemplo, 100 años en el futuro)
+    date.setFullYear(date.getFullYear() + 100); 
+
+    document.cookie = name + "=" + (value || "") 
+                    + "; expires=" + date.toUTCString() // Fecha de expiración
+                    + "; path=/"  // La cookie estará disponible en todo el sitio web
+                    + "; Secure"  // Solo permitir en conexiones HTTPS
+                    //+ "; HttpOnly"  // Bloquear acceso desde JS (protegido contra XSS)
+                    + "; SameSite=Strict";  // Prevenir ataques CSRF
+}
+
+
 //GET COOKIE FUNCTION
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
 
 

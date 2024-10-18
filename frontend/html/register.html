@@ -41,6 +41,33 @@
 	<script type="text/javascript">
 
 
+		function login(response) {
+			if (response["loginHash"] != null) {
+        		setCookie("userId", response["userId"]);
+        		setCookie("loginHash", response["loginHash"]);
+        		if (getCookie("userId") != null) {
+        			window.location.href = "./board.html";
+        		}
+        	}
+		}
+
+
+		document.addEventListener("DOMContentLoaded", function() {
+			var userIdCookie = getCookie("userId");
+			var loginHashCookie = getCookie("loginHash");
+			if (userIdCookie != null && loginHashCookie != null) {
+    			callDatabase("login", { userId: userIdCookie, loginHash: loginHashCookie })
+	                .then(response => {
+	                	login(response);
+	                })
+	                .catch(error => {
+	                	console.log('Error creating user: ' + error);
+	                });
+    		}
+		});
+
+
+
 		function getCityByName(){
 			const cityInput = document.getElementById('city');
 			const cityIdInput = document.getElementById('cityId');
@@ -64,8 +91,7 @@
         document.getElementById('createUserForm').addEventListener('submit', function(event) {
             callDatabase("createUser", getFormData(event.target))
                 .then(response => {
-                	console.log(response);
-                    /*document.getElementById('createResult').innerText = 'User created: ' + JSON.stringify(response);*/
+                	login(response);
                 })
                 .catch(error => {
                 	console.log('Error creating user: ' + error);

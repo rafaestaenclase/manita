@@ -10,20 +10,23 @@ class UserController {
     // Método para crear un nuevo usuario
     public function createUser($values) {
 
+        $loginHash = bin2hex(random_bytes(32));
+
         // Query SQL para la inserción
-        $query = "INSERT INTO users (name, city_id, avatar) VALUES (:name, :cityId, :avatar)";
+        $query = "INSERT INTO users (name, city_id, avatar, login_hash) VALUES (:name, :cityId, :avatar, :loginHash)";
 
         // Preparar y ejecutar la consulta
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':name', $values["name"]);
         $stmt->bindParam(':cityId', $values["cityId"]);
         $stmt->bindParam(':avatar', $values["avatar"]);
+        $stmt->bindParam(':loginHash', $loginHash);
         $stmt->execute();
 
         // Obtener el ID del usuario insertado
         $userId = $this->db->lastInsertId();
 
-        echo json_encode($userId);
+        echo json_encode(["userId" => $userId, "loginHash" => $loginHash]);
     }
 
 
@@ -35,17 +38,6 @@ class UserController {
         $stmt = $this->db->prepare($query);
         $newData['id'] = $userId;
         $stmt->execute($newData);
-
-        return $stmt->rowCount() > 0;
-    }
-
-    // Método para eliminar un usuario
-    public function deleteUser($values) {
-        $query = "DELETE FROM users WHERE id = :id";
-
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $values);
-        $stmt->execute();
 
         return $stmt->rowCount() > 0;
     }
@@ -96,19 +88,19 @@ class UserController {
 
 
     public function login($values) {
-        if (isset($values["telephone"]) && is_numeric($values["telephone"])) {
+        if (isset($values["userId"]) && isset($values["loginHash"])) {
 
-            $query = "SELECT id, password FROM users WHERE telephone = :telephone";
+            $query = "SELECT id, login_hash FROM users WHERE id = :userId and login_hash = :loginHash";
 
             try {
                 $stmt = $this->db->prepare($query);
-                $stmt->bindParam(':telephone', $values["telephone"]);
+                $stmt->bindParam(':userId', $values["userId"]);
+                $stmt->bindParam(':loginHash', $values["loginHash"]);
                 $stmt->execute();
 
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                if ($result && password_verify($values["password"], $result['password'])) {
-
+                if ($result) {
+                
                     if ($this->updateLoginHash($result)) {
 
                         $query = "SELECT id, login_hash FROM users WHERE id = :id";
@@ -117,14 +109,14 @@ class UserController {
                         $stmt->bindParam(':id', $result["id"]);
                         $stmt->execute();
 
-                        echo json_encode($stmt->fetch(PDO::FETCH_ASSOC));
+                        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                        echo json_encode(["userId" => $user['id'], "loginHash" => $user['login_hash']]);
 
                     } else {
                         echo json_encode(["error" => "Error en actualizar hash de login."]);
                     }
-                    
                 } else {
-                    echo json_encode(["error" => "Contraseña incorrecta."]);
+                    echo json_encode("No logged");
                 }
 
             } catch (PDOException $e) {
