@@ -7,7 +7,7 @@ $password = '';
 
 // Crear una instancia de conexión PDO
 try {
-    $db = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $e) {
     // Manejar el error de conexión a la base de datos

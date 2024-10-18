@@ -38,7 +38,6 @@ function callDatabase(uri, values) {
                     return response.json();
                 })
                 .then(data => {
-                	console.log(data);
                     resolve(data);
                 })
                 .catch(error => {

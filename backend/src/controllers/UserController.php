@@ -9,37 +9,16 @@ class UserController {
 
     // Método para crear un nuevo usuario
     public function createUser($values) {
-        // Verificar si el correo electrónico o el teléfono ya existen
-        $queryCheck = "SELECT COUNT(*) as count FROM users WHERE email = :email OR telephone = :telephone";
-        $stmtCheck = $this->db->prepare($queryCheck);
-        $stmtCheck->bindParam(':email', $values['email']);
-        $stmtCheck->bindParam(':telephone', $values['telephone']);
-        $stmtCheck->execute();
-        $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
-
-        // Si el correo electrónico o el teléfono ya existen, devuelve un error
-        if ($resultCheck['count'] > 0) {
-            echo json_encode(["error" => "El correo electrónico o el teléfono ya están registrados."]);
-            return;
-        }
-
-        // Filtrar los valores proporcionados por el usuario
-        $allowedKeys = ['name', 'subname', 'dob', 'telephone', 'email', 'password', 'address', 'avatar', 'desc', 'language'];
-
-        $values['password'] = password_hash($values['password'], PASSWORD_DEFAULT);
-
-        $filteredValues = array_intersect_key($values, array_flip($allowedKeys));
-
-        // Construir la consulta SQL dinámicamente
-        $columns = implode(', ', array_keys($filteredValues));
-        $params = ':' . implode(', :', array_keys($filteredValues));
 
         // Query SQL para la inserción
-        $query = "INSERT INTO users ($columns) VALUES ($params)";
+        $query = "INSERT INTO users (name, city_id, avatar) VALUES (:name, :cityId, :avatar)";
 
         // Preparar y ejecutar la consulta
         $stmt = $this->db->prepare($query);
-        $stmt->execute($filteredValues);
+        $stmt->bindParam(':name', $values["name"]);
+        $stmt->bindParam(':cityId', $values["cityId"]);
+        $stmt->bindParam(':avatar', $values["avatar"]);
+        $stmt->execute();
 
         // Obtener el ID del usuario insertado
         $userId = $this->db->lastInsertId();

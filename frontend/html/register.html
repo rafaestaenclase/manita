@@ -12,96 +12,88 @@
 		<span class="greeting">
 			<h1>¡HOLA! :)</h1>
 		</span>
-		<span class="greeting hidden">
-			<h1>CUÉNTANOS</h1>
-		</span>
-		<span class="greeting hidden">
-			<h1>PATATAA</h1>
-		</span>
-		<span class="greeting hidden">
-			<h1>IMPORTANTE</h1>
-		</span>
 	</div>
 
 
 	<div id="container">
-		<div class="register">
-			<span class="inputContainer">
-				<label for="name">¿CÓMO TE LLAMAS?</label>
-				<br>
-				<input type="text" id="name" name="name" placeholder="NOMBRE Y APELLIDO" minlength="2" maxlength="50" required>
-			</span>
-		</div>
-
-		<div class="register ">
-			<span class="inputContainer">
-				<label for="name">¿DE DONDE ERES?</label>
-				<br>
-				<select id="province"onchange="loadCities()">
-				    <option value="">provincia</option>
-				</select>
-				<select id="city"></select>
-			</span>
-		</div>
-
-		<div class="register ">
-			<span class="inputContainer">
-				<label for="name">LA CONFIANZA COMIENZA CON UNA SONRISA</label>
-				<br>
-				<input type="button" id="name" name="name" value="SUBIR FOTO" minlength="2" maxlength="50">
-			</span>
-		</div>
-
-		<div class="register ">
-			<span class="inputContainer">
-				<h2>EL VOLUNTARIADO ES LO BONITO DEL SER HUMANO EN ACCIÓN.</h2>
-				<p>Por esta razón, trabajamos diariamente para mantener una comunidad saludable en Manita.
-				El uso fraudulento de la app puede resultar en expulsión o acciones legales por nuestra parte.
-				Este es tu hogar, tu comunidad y tu fuente de motivación. Cuidémoslo con cariño <3</p>
-			</span>
-		</div>
-
 		<form id="createUserForm">
+			<label for="name">¿CÓMO TE LLAMAS?</label>
+			<br>
+			<input type="text" id="name" name="name" placeholder="NOMBRE Y APELLIDO" minlength="2" maxlength="50" required>
+
+			<label for="name">¿DE DONDE ERES?</label>
+			<br>
+			<input type="text" id="city" name="city" placeholder="CIUDAD" minlength="2" maxlength="50" required onchange="getCityByName()">
+			<input type="text" id="cityId" name="cityId" required class="hidden">
+
+			<br>
+			<input type="text" id="avatar" name="avatar" value="SUBIR FOTO" minlength="2" maxlength="50">
+			<input type="submit" id="createUserSubmit" class="invisible" value="submit">
 		</form>
 	</div>
 
 
 	<div id="nav">
 		<button id="backButton" class="invisible">ATRÁS</button>
-		<button id="nextButton">SIGUIENTE</button>
+		<button id="register">REGISTRAR</button>
 	</div>
 	<script type="text/javascript" src="./../js/default.js"></script>
 	<script type="text/javascript">
-		document.getElementById('getProvinces').addEventListener('submit', function(event) {
-		    event.preventDefault(); // Prevent the default form submission behavior
-		    
-		    callDatabase("getPostsByUserId", getFormData(event.target))
+
+
+		function getCityByName(){
+			const cityInput = document.getElementById('city');
+			const cityIdInput = document.getElementById('cityId');
+
+		    callDatabase("getCityByName", { cityName: cityInput.value })
 		        .then(response => {
-		            var resultDiv = document.getElementById('postsByUserIdResult');
-		            const posts = response.posts;
-		            const hasMore = response.hasMore;
-		            const form = document.getElementById('getPostsByUserIdForm');
-		            const page = form.querySelector('input[id="page"]');
-		            const submitButton = form.querySelector('button[type="submit"]');
-		            const postsPerPage = 4;
-
-		            for (let i = 0; i < Math.min(postsPerPage, posts.length); i++) {
-		                const post = posts[i];
-		                const postDiv = document.createElement('div');
-		                postDiv.textContent = post.title;
-		                resultDiv.appendChild(postDiv);
-		            }
-
-		            if (hasMore) {
-		                page.value = parseInt(page.value) + 1;
-		            } else {
-		                submitButton.disabled = true;
+		        	console.log(response);
+		            if (response && Array.isArray(response)) {
+		                cityInput.value = response[0]["name"];
+		                cityIdInput.value = response[0]["id"];
 		            }
 		        })
 		        .catch(error => {
-		            document.getElementById('postsByUserIdResult').innerText = 'Error retrieving posts: ' + error;
+		            console.log(error);
 		        });
-		});
+		}
+
+
+
+        //createUser
+        document.getElementById('createUserForm').addEventListener('submit', function(event) {
+            callDatabase("createUser", getFormData(event.target))
+                .then(response => {
+                	console.log(response);
+                    /*document.getElementById('createResult').innerText = 'User created: ' + JSON.stringify(response);*/
+                })
+                .catch(error => {
+                	console.log('Error creating user: ' + error);
+                });
+        });
+
+        document.getElementById('register').addEventListener('click', function(event) {
+        	if (checkAllInputs()) {
+    			document.getElementById('createUserSubmit').click();
+        	}
+
+        });
+
 	</script>
 </body>
 </html>
+
+
+
+
+<!--
+<span class="inputContainer">
+				<h2>EL VOLUNTARIADO ES LO BONITO DEL SER HUMANO EN ACCIÓN.</h2>
+				<p>Por esta razón, trabajamos diariamente para mantener una comunidad saludable en Manita.
+				El uso fraudulento de la app puede resultar en expulsión o acciones legales por nuestra parte.
+				Este es tu hogar, tu comunidad y tu fuente de motivación. Cuidémoslo con cariño <3</p>
+			</span>
+
+
+
+-->

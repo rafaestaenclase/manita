@@ -1,24 +1,27 @@
-
 DROP TABLE IF EXISTS user_post_contact;
 DROP TABLE IF EXISTS post_feedback;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS cities;
-DROP TABLE IF EXISTS province;
+DROP TABLE IF EXISTS provinces;
+
+-- Crear la base de datos con codificación utf8mb4
+CREATE DATABASE IF NOT EXISTS manita CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE manita;
 
 -- Crear la tabla de provincias
-CREATE TABLE province (
+CREATE TABLE provinces (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Crear la tabla de ciudades
 CREATE TABLE cities (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     province_id INT,
-    FOREIGN KEY (province_id) REFERENCES province(id) ON DELETE SET NULL ON UPDATE CASCADE
-);
+    FOREIGN KEY (province_id) REFERENCES provinces(id) ON DELETE SET NULL ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Crear la tabla de usuarios
 CREATE TABLE users (
@@ -29,7 +32,7 @@ CREATE TABLE users (
     login_hash VARCHAR(255) UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (city_id) REFERENCES cities(id) ON DELETE SET NULL ON UPDATE CASCADE
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Crear la tabla de posts
 CREATE TABLE posts (
@@ -44,7 +47,7 @@ CREATE TABLE posts (
     active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Crear la tabla de contactos de usuario con post (quien ha pulsado algún botón de contactar en el post)
 CREATE TABLE user_post_contact (
@@ -54,7 +57,7 @@ CREATE TABLE user_post_contact (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE KEY unique_user_post_contact (user_id, post_id)
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Crear la tabla de retroalimentación de posts
 CREATE TABLE post_feedback (
@@ -66,7 +69,7 @@ CREATE TABLE post_feedback (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE KEY unique_user_post_role (user_id, post_id, user_role) -- Un usuario puede dar una valoración por rol (ayudante o receptor)
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 
 
@@ -76,7 +79,7 @@ CREATE TABLE post_feedback (
 
 
 -- Insertar todas las provincias de España en la tabla 'province'
-INSERT INTO province (id, name) VALUES
+INSERT INTO provinces (id, name) VALUES
 (1, 'Álava'),
 (2, 'Albacete'),
 (3, 'Alicante'),

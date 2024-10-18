@@ -17,6 +17,8 @@ require_once './../config/database.php';
 require_once './Routing.php';
 require_once './../src/controllers/UserController.php';
 require_once './../src/controllers/PostController.php';
+require_once './../src/controllers/ProvinceController.php';
+require_once './../src/controllers/CityController.php';
 
 // Decode the JSON input
 $data = json_decode(file_get_contents('php://input'), true);
@@ -34,6 +36,8 @@ $router->add('getUserById', 'UserController@getUserById');
 $router->add('login', 'UserController@login');
 $router->add('checkLoginStatus', 'UserController@checkLoginStatus');
 
+$router->add('getCityByName', 'CityController@getCityByName');
+
 
 //Secured action. Loggined needed.
 if ($data !== null && isset($data["values"]) && isset($data["values"]["loggedUserId"]) && isset($data["values"]["loggedHash"])) {
@@ -49,7 +53,6 @@ if ($data !== null && isset($data["values"]) && isset($data["values"]["loggedUse
 	}
 
 }
-
 
 // Run the router if data is provided
 if ($data != null) {
