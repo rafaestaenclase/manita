@@ -4,7 +4,7 @@
 	<link rel="stylesheet" type="text/css" href="./../css/default.css" />
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
+	<script type="text/javascript" src="./../js/databaseConfig.js"></script>
 	<title></title>
 </head>
 <body>
@@ -33,15 +33,18 @@
 			</span>
 		</div>
 
-		<div class="register hidden">
+		<div class="register ">
 			<span class="inputContainer">
 				<label for="name">¿DE DONDE ERES?</label>
 				<br>
-				<input type="text" id="city" name="city" placeholder="CIUDAD" minlength="2" maxlength="50" required>
+				<select id="province"onchange="loadCities()">
+				    <option value="">provincia</option>
+				</select>
+				<select id="city"></select>
 			</span>
 		</div>
 
-		<div class="register hidden">
+		<div class="register ">
 			<span class="inputContainer">
 				<label for="name">LA CONFIANZA COMIENZA CON UNA SONRISA</label>
 				<br>
@@ -49,7 +52,7 @@
 			</span>
 		</div>
 
-		<div class="register hidden">
+		<div class="register ">
 			<span class="inputContainer">
 				<h2>EL VOLUNTARIADO ES LO BONITO DEL SER HUMANO EN ACCIÓN.</h2>
 				<p>Por esta razón, trabajamos diariamente para mantener una comunidad saludable en Manita.
@@ -68,5 +71,37 @@
 		<button id="nextButton">SIGUIENTE</button>
 	</div>
 	<script type="text/javascript" src="./../js/default.js"></script>
+	<script type="text/javascript">
+		document.getElementById('getProvinces').addEventListener('submit', function(event) {
+		    event.preventDefault(); // Prevent the default form submission behavior
+		    
+		    callDatabase("getPostsByUserId", getFormData(event.target))
+		        .then(response => {
+		            var resultDiv = document.getElementById('postsByUserIdResult');
+		            const posts = response.posts;
+		            const hasMore = response.hasMore;
+		            const form = document.getElementById('getPostsByUserIdForm');
+		            const page = form.querySelector('input[id="page"]');
+		            const submitButton = form.querySelector('button[type="submit"]');
+		            const postsPerPage = 4;
+
+		            for (let i = 0; i < Math.min(postsPerPage, posts.length); i++) {
+		                const post = posts[i];
+		                const postDiv = document.createElement('div');
+		                postDiv.textContent = post.title;
+		                resultDiv.appendChild(postDiv);
+		            }
+
+		            if (hasMore) {
+		                page.value = parseInt(page.value) + 1;
+		            } else {
+		                submitButton.disabled = true;
+		            }
+		        })
+		        .catch(error => {
+		            document.getElementById('postsByUserIdResult').innerText = 'Error retrieving posts: ' + error;
+		        });
+		});
+	</script>
 </body>
 </html>
