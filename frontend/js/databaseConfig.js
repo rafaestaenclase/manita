@@ -9,8 +9,8 @@ function getFormData(form) {
     });
 
     if (localStorage.getItem('logged_user_id') !== null && localStorage.getItem('logged_hash') !== null) {
-        postData["loggedUserId"] = localStorage.getItem('logged_user_id');
-        postData["loggedHash"] = localStorage.getItem('logged_hash');
+        postData["loggedUserId"] = getCookie("userId");
+        postData["loggedHash"] = getCookie("loginHash");
     }
 
     return postData;

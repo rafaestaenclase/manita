@@ -46,10 +46,25 @@
     </div>
 
     <div id="nav">
-        <button class="redButton" onclick="javascript:history.back()">ATRÁS</button>
+        <button class="redButton" onclick="location.href='./board.html'">ATRÁS</button>
         <button onclick="location.href='./settings.html'" class="blueButton">AJUSTES</button>
     </div>
 
     <script type="text/javascript" src="./../js/default.js"></script>
+
+
+    <script type="text/javascript">
+        // Obtener los parámetros de la URL
+        const params = new URLSearchParams(window.location.search);
+
+        // Obtener el valor del parámetro 'viewPost'
+        const viewPost = params.get('viewPost');
+
+        if (viewPost) {
+            console.log('viewPost: ' + viewPost);
+        } else {
+            console.log('Error: viewPost not found in the URL');
+        }
+    </script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 
 const inputContainers = document.querySelectorAll('.inputContainer');
-const inputs = document.querySelectorAll('input');
+const inputs = document.querySelectorAll('input, textarea');
 const header = document.getElementById('header');
 const container = document.getElementById('container');
 

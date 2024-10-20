@@ -15,30 +15,56 @@
     </div>
 
     <div id="container">
-    	<div class="register">
+    	<form id="createPostForm">
 	        <span class="inputContainer">
-				<label for="name">TÍTULO</label>
+				<label for="title">TÍTULO</label>
 				<br>
-				<input type="text" id="name" name="name" placeholder="ESCRIBE AQUÍ" minlength="2" maxlength="50" required>
+				<input type="text" id="title" name="title" placeholder="ESCRIBE EL TÍTULO" minlength="2" maxlength="50" required>
 			</span>
 			<span class="inputContainer">
-				<label for="description">DESCRIPCIÓN</label>
+				<label for="body">DESCRIPCIÓN</label>
 				<br>
-				<input type="textarea" id="description" name="description" placeholder="ESCRIBE EL TÍTULO" minlength="2" maxlength="50" required>
+				<textarea id="body" name="body" placeholder="DESCRIBE TU NECESIDAD" minlength="2" maxlength="50" required></textarea>
 			</span>
 			<span class="inputContainer">
-				<label for="name">BARRIO</label>
+				<label for="neighborhood">BARRIO</label>
 				<br>
-				<input type="text" id="name" name="barrio" placeholder="ESCRIBE AQUÍ" minlength="2" maxlength="50" required>
+				<input type="text" id="neighborhood" name="neighborhood" placeholder="ESCRIBE TU BARRIO" minlength="2" maxlength="50" required>
 			</span>
-		</div>
+			<input type="submit" id="createUserSubmit" class="invisible" value="submit">
+		</form>
     </div>
 
     <div id="nav">
-		<button class="redButton" onclick="javascript:history.back()">ATRÁS</button>
-		<button id="finishButton">FINALIZAR</button>
+		<button class="redButton" onclick="location.href='./board.html'">ATRÁS</button>
+		<button id="register">FINALIZAR</button>
     </div>
 
-    <script type="text/javascript" src="./../js/default.js"></script>
+	<script type="text/javascript" src="./../js/databaseConfig.js"></script>
+	<script type="text/javascript" src="./../js/default.js"></script>
+    <script type="text/javascript">
+
+    	document.getElementById('register').addEventListener('click', function(event) {
+        	if (checkAllInputs()) {
+    			document.getElementById('createUserSubmit').click();
+        	}
+
+        });
+
+
+    	document.getElementById('createPostForm').addEventListener('submit', function(event) {
+    		var formData = getFormData(event.target);
+    		console.log(formData);
+	        callDatabase("createPost", formData)
+	            .then(response => {
+				    const responseString = JSON.stringify(response); // Convertir response a una cadena
+					// Redirigir a profile.html con el parámetro viewPost
+					window.location.href = `./profile.html?viewPost=${encodeURIComponent(responseString)}`;
+	            })
+	            .catch(error => {
+	                console.log('Error creating post: ' + error);
+	            });
+	    });
+    </script>
 </body>
 </html>

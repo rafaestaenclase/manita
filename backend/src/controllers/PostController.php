@@ -8,18 +8,18 @@ class PostController {
     }
 
     public function createPost($values) {
-        foreach (['loggedUserId', 'categoryId', 'title', 'body'] as $key) {
+        foreach (['loggedUserId', 'title', 'body'] as $key) {
             if (empty($values[$key])) {
                 echo json_encode(["error" => "$key is required."]);
                 return;
             }
         }
 
-        $allowedKeys = ['loggedUserId', 'categoryId', 'title', 'body', 'imageUrl', 'reward', 'address', 'language'];
+        $allowedKeys = ['loggedUserId', 'title', 'body', 'neighborhood'];
         $filteredValues = array_intersect_key($values, array_flip($allowedKeys));
 
-        $query = "INSERT INTO posts (user_id, category_id, title, body, image_url, reward, address, language)
-                  VALUES (:loggedUserId, :categoryId, :title, :body, :imageUrl, :reward, :address, :language)";
+        $query = "INSERT INTO posts (user_id, title, body, neighborhood)
+                  VALUES (:loggedUserId, :title, :body, :neighborhood)";
 
         try {
             $stmt = $this->db->prepare($query);
