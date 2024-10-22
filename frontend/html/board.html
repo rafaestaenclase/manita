@@ -13,43 +13,6 @@
 
 
     <div id="container">
-        <div class="post">
-
-            <div class="userButton" onclick="location.href='./profile.html?userId=12'">
-                <span class="userImage"></span>
-                <span>JOSÉ FANCISCO</span>
-            </div>
-
-            <span class="postHead">AYUDA CON UNA BICI</span>
-
-            <p class="postBody">
-                Estoy buscando a alguien que pueda ayudarme con la reparación de mi bicicleta. Uso mi bici diariamente para ir al trabajo y hacer recados, pero recientemente tuve una avería.
-            </p>
-
-            <span class="postLocation">ZARAMAGA</span>
-
-            <button class="showContacts">CONTACTAR</button>
-
-        </div>
-
-        <div class="post">
-
-            <div class="userButton" onclick="location.href='./profile.html?userId=12'">
-                <span class="userImage"></span>
-                <span>JOSÉ FANCISCO</span>
-            </div>
-
-            <span class="postHead">AYUDA CON UNA BICI</span>
-
-            <p class="postBody">
-                Estoy buscando a alguien que pueda ayudarme con la reparación de mi bicicleta. Uso mi bici diariamente para ir al trabajo y hacer recados, pero recientemente tuve una avería.
-            </p>
-
-            <span class="postLocation">ZARAMAGA</span>
-
-            <button class="showContacts">CONTACTAR</button>
-
-        </div>
 
     </div>
 
@@ -58,7 +21,89 @@
         <button class="yellowButton" onclick="location.href='./createPost.html'">SOLICITAR AYUDA</button>
         <button class="greenButton" onclick="location.href='./profile.html'">YO</button>
     </div>
-    
+    <script type="text/javascript" src="./../js/databaseConfig.js"></script>
     <script type="text/javascript" src="./../js/default.js"></script>
+
+
+    <script type="text/javascript">
+        
+    document.addEventListener("DOMContentLoaded", function() {
+        var userId = getCookie("userId");
+        console.log(userId);
+        // Llamada a la base de datos para obtener los posts
+        callDatabase("getBoardPosts", false)
+            .then(response => {
+                console.log(response);
+                const container = document.getElementById('container');
+
+                response.posts.forEach(post => {
+                    // Creamos el div del post
+                    const postDiv = document.createElement('div');
+                    postDiv.classList.add('post');
+
+
+                    // Div del botón del usuario
+                    const userButtonDiv = document.createElement('div');
+                    userButtonDiv.classList.add('userButton');
+                    userButtonDiv.onclick = function() {
+                        location.href = './profile.html?userId=' + post.user_id;
+                    };
+                    
+                    // Imagen del usuario
+                    const userImageSpan = document.createElement('span');
+                    userImageSpan.classList.add('userImage');
+                    userButtonDiv.appendChild(userImageSpan);
+
+                    // Nombre del usuario
+                    const userNameSpan = document.createElement('span');
+                    userNameSpan.textContent = post.user_name.toUpperCase();  // Asignar el nombre del usuario
+                    userButtonDiv.appendChild(userNameSpan);
+
+                    // Agregar userButton al post
+                    postDiv.appendChild(userButtonDiv);
+
+                    // Título del post
+                    const titleSpan = document.createElement('span');
+                    titleSpan.classList.add('postHead');
+                    titleSpan.textContent = post.title;
+                    postDiv.appendChild(titleSpan);
+
+                    // Cuerpo del post
+                    const bodyParagraph = document.createElement('p');
+                    bodyParagraph.classList.add('postBody');
+                    bodyParagraph.textContent = post.body;
+                    postDiv.appendChild(bodyParagraph);
+
+                    // Ubicación del post
+                    const neighborhoodSpan = document.createElement('span');
+                    neighborhoodSpan.classList.add('postLocation');
+                    neighborhoodSpan.textContent = post.neighborhood;
+                    postDiv.appendChild(neighborhoodSpan);
+
+                    // Botón de contactar o finalizar
+                    const button = document.createElement('button');
+                    button.classList.add('showContacts');
+
+                    if (getCookie("userId") == post.user_id) {
+                        button.textContent = "FINALIZAR";
+                    } else {
+                        button.textContent = "CONTACTAR";
+                    }
+
+                    postDiv.appendChild(button);
+
+                    // Añadir el post completo al contenedor
+                    container.appendChild(postDiv);
+
+                    // Cargar tamaño de fuente (suponiendo que la función loadFontSize existe)
+                    loadFontSize();
+                });
+            })
+            .catch(error => {
+                console.log('Error creating user: ' + error);
+        });
+    });
+
+    </script>
 </body>
 </html>

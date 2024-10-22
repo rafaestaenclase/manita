@@ -46,8 +46,11 @@ if ($data !== null && isset($data["values"]) && isset($data["values"]["loggedUse
     $isLogged = $user->checkLoginStatus($data["values"]);
 
 	if ($isLogged == true) {
+
+
 		$router->add('createPost', 'PostController@createPost');
 		$router->add('getPostsByUserId', 'PostController@getPostsByUserId');
+		$router->add('getBoardPosts', 'PostController@getBoardPosts');
 		$router->add('getPostById', 'PostController@getPostById');
 		$router->add('deletePostById', 'PostController@deletePostById');
 	}

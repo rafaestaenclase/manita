@@ -85,9 +85,17 @@
                         // Botón
                         const button = document.createElement('button');
                         button.classList.add('contacts');
-                        button.textContent = post.buttonText;
-                        postDiv.appendChild(button);
+                        
 
+                        if (getCookie("userId") == post.user_id) {
+                            button.textContent = "FINALIZAR";
+                        } else {
+                            button.textContent = "CONTACTAR";
+                        }
+
+                        postDiv.appendChild(button);
+                        loadFontSize();
+                        
                         // Añadimos el post completo al contenedor
                         container.appendChild(postDiv);
                     });
@@ -96,7 +104,6 @@
                     console.log('Error creating user: ' + error);
                 });
         });
-
 
     </script>
 </body>

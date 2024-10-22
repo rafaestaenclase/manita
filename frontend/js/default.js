@@ -109,10 +109,13 @@ function getCookie(name) {
 
 
 //FONT SIZE
-let fontSize = parseInt(getCookie('fontSize')) || 28;
+document.addEventListener("DOMContentLoaded", function() {
+    loadFontSize();
+});
 
-document.addEventListener('DOMContentLoaded', function() {
+let fontSize = parseInt(getCookie('fontSize')) || 28;
+ function loadFontSize() {
     document.querySelectorAll('*').forEach(element => {
         element.style.fontSize = fontSize + 'px';
     });
-});
+ }

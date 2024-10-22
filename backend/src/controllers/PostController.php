@@ -44,7 +44,7 @@ class PostController {
         if (isset($values["userId"])) {
             $userId = $values["userId"];
 
-            $query = "SELECT * FROM posts WHERE user_id = :userId";
+            $query = "SELECT * FROM posts WHERE user_id = :userId and active = 1";
 
             try {
                 $stmt = $this->db->prepare($query);
@@ -65,7 +65,28 @@ class PostController {
     }
 
 
+    public function getBoardPosts($values) {
+        if (isset($values["loggedUserId"])) {
+            $userId = $values["loggedUserId"];
 
+            $query = "SELECT posts.*, users.avatar as user_avatar, users.name as user_name FROM posts JOIN users ON posts.user_id = users.id WHERE posts.user_id != :userId AND posts.active = 1;";
+
+            try {
+                $stmt = $this->db->prepare($query);
+                $stmt->bindParam(':userId', $userId);
+                $stmt->execute();
+
+                $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                // Return the posts and indication if there are more available
+                echo json_encode(["posts" => $posts]);
+            } catch (PDOException $e) {
+                echo json_encode(["error" => "Database error: " . $e->getMessage()]);
+            }
+        } else {
+            echo json_encode(["error" => "User ID parameter is required."]);
+        }
+    }
 
 
     public function getPostById($values) {
