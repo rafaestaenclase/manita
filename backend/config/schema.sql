@@ -30,11 +30,9 @@ CREATE TABLE posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     title VARCHAR(60) NOT NULL,
-    body VARCHAR(255),
-    telephone VARCHAR(15),
+    body VARCHAR(255) NOT NULL,
+    telephone INT NOT NULL,
     neighborhood VARCHAR(20),
-    phone_call BOOLEAN,
-    chat_link BOOLEAN, 
     active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE

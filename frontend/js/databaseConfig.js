@@ -7,18 +7,19 @@ function getFormData(form) {
     formData.forEach((value, key) => {
         postData[key] = value;
     });
-
-    if (localStorage.getItem('logged_user_id') !== null && localStorage.getItem('logged_hash') !== null) {
-        postData["loggedUserId"] = getCookie("userId");
-        postData["loggedHash"] = getCookie("loginHash");
-    }
-
+    
     return postData;
 }
 
 function callDatabase(uri, values) {
     return new Promise((resolve, reject) => {
         try {
+
+            if (localStorage.getItem('logged_user_id') !== null && localStorage.getItem('logged_hash') !== null) {
+                values["loggedUserId"] = getCookie("userId");
+                values["loggedHash"] = getCookie("loginHash");
+            }
+
             const config = {
                 method: 'POST',
                 headers: {

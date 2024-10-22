@@ -31,7 +31,7 @@ inputs.forEach(input => {
 
 
 function checkAllInputs() {
-    const inputs = document.querySelectorAll('input');
+    const inputs = document.querySelectorAll('input, textarea');
     let allInputsFilled = true;
 
     inputs.forEach(input => {

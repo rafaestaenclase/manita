@@ -40,43 +40,28 @@ class PostController {
 
 
     public function getPostsByUserId($values) {
+
         if (isset($values["userId"])) {
             $userId = $values["userId"];
-            $page = isset($values["page"]) ? intval($values["page"]) : 1;
-            $limit = 5;
 
-            $offset = max(0, ($page - 1) * $limit);
-
-            // Adjust the limit to fetch one additional post to check if there are more available
-            $limitForQuery = $limit + 1;
-
-            $query = "SELECT * FROM posts WHERE user_id = :userId LIMIT :limit OFFSET :offset";
+            $query = "SELECT * FROM posts WHERE user_id = :userId";
 
             try {
                 $stmt = $this->db->prepare($query);
                 $stmt->bindParam(':userId', $userId);
-                $stmt->bindParam(':limit', $limitForQuery, PDO::PARAM_INT); // Using the adjusted limit
-                $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
                 $stmt->execute();
 
                 $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                // Check if there are more posts available
-                $hasMore = count($posts) > $limit;
-
-                // If there are more posts than we are going to display, remove the last post
-                if ($hasMore) {
-                    array_pop($posts);
-                }
-
                 // Return the posts and indication if there are more available
-                echo json_encode(["posts" => $posts, "hasMore" => $hasMore]);
+                echo json_encode(["posts" => $posts]);
             } catch (PDOException $e) {
                 echo json_encode(["error" => "Database error: " . $e->getMessage()]);
             }
         } else {
             echo json_encode(["error" => "User ID parameter is required."]);
         }
+        
     }
 
 
