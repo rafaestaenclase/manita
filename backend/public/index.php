@@ -32,10 +32,7 @@ $router->add('/', function() {
 
 // Make sure the class name matches the controller file
 $router->add('createUser', 'UserController@createUser');
-$router->add('getUserById', 'UserController@getUserById');
 $router->add('login', 'UserController@login');
-$router->add('checkLoginStatus', 'UserController@checkLoginStatus');
-
 $router->add('getCityByName', 'CityController@getCityByName');
 
 
@@ -47,7 +44,7 @@ if ($data !== null && isset($data["values"]) && isset($data["values"]["loggedUse
 
 	if ($isLogged == true) {
 
-
+		$router->add('getUserProfile', 'UserController@getUserProfile');
 		$router->add('createPost', 'PostController@createPost');
 		$router->add('getPostsByUserId', 'PostController@getPostsByUserId');
 		$router->add('getBoardPosts', 'PostController@getBoardPosts');

@@ -32,9 +32,15 @@ function callDatabase(uri, values) {
                     uri: uri
                 }),
             };
-
+            console.log(config);
             fetch(`${SERVERIP}/public/index.php`, config)
                 .then(response => {
+
+                    if (response.status === 403) { //forbiden, Not logged
+                        window.location.href = 'register.html';
+                        return;
+                    }
+
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }

@@ -113,8 +113,10 @@ document.addEventListener("DOMContentLoaded", function() {
     loadFontSize();
 });
 
-let fontSize = parseInt(getCookie('fontSize')) || 28;
+
  function loadFontSize() {
+    let fontSize = parseInt(getCookie('fontSize')) || 28;
+    
     document.querySelectorAll('*').forEach(element => {
         element.style.fontSize = fontSize + 'px';
     });

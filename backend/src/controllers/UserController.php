@@ -43,13 +43,13 @@ class UserController {
     }
 
     // Método para obtener un usuario por su ID
-    public function getUserById($values) {
-        if (is_numeric($values["id"])) {
+    public function getUserProfile($values) {
+        if (is_numeric($values["userId"])) {
 
-            $query = "SELECT id, name, subname, email FROM users WHERE id = :id";
+            $query = "SELECT id, name, avatar FROM users WHERE id = :userId";
 
             $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':id', $values["id"]);
+            $stmt->bindParam(':userId', $values["userId"]);
             $stmt->execute();
 
             echo json_encode($stmt->fetch(PDO::FETCH_ASSOC));

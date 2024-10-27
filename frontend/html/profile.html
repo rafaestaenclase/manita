@@ -12,7 +12,7 @@
 <body>
     <div id="header" class="backgroundYellow">
         <span class="userImage"></span>
-        JOSÉ FRANCISCO
+        <span id="userName" class="userName"></span>
     </div>
 
 
@@ -36,9 +36,7 @@
         const viewPost = params.get('viewPost');
 
         if (viewPost) {
-            console.log('viewPost: ' + viewPost);
-        } else {
-            console.log('Error: viewPost not found in the URL');
+            console.log('Remarcar el post');
         }
 
 
@@ -52,13 +50,21 @@
                 userId = params.get('userId');
             }
 
-            if (viewPost) {
-                console.log('viewPost: ' + viewPost);
-            }
+
+            callDatabase("getUserProfile", { userId: userId })
+                .then(response => {
+                    document.getElementById('userName').innerHTML = response.name;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
+
+
+
 
             callDatabase("getPostsByUserId", { userId: userId })
                 .then(response => {
-                    console.log(response);
                     const container = document.getElementById('container');
 
                     response.posts.forEach(post => {
@@ -94,14 +100,15 @@
                         }
 
                         postDiv.appendChild(button);
-                        loadFontSize();
                         
                         // Añadimos el post completo al contenedor
                         container.appendChild(postDiv);
+
+                         loadFontSize();
                     });
                 })
                 .catch(error => {
-                    console.log('Error creating user: ' + error);
+                    console.log(error);
                 });
         });
 

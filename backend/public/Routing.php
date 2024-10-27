@@ -69,9 +69,8 @@ class Router
     }
 
     // Optional method to handle routes not found
-    private function handleNotFound() 
-    {
-        echo json_encode("You don't have permission to access this resource.");
+    private function handleNotFound() {
+        http_response_code(403); // Código 403 para "Forbidden" (prohibido)
     }
 }
 
