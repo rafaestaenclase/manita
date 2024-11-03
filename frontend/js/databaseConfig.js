@@ -32,12 +32,12 @@ function callDatabase(uri, values) {
                     uri: uri
                 }),
             };
-            console.log(config);
+
             fetch(`${SERVERIP}/public/index.php`, config)
                 .then(response => {
 
                     if (response.status === 403) { //forbiden, Not logged
-                        window.location.href = 'register.html';
+                        window.location.href = './register.html';
                         return;
                     }
 
@@ -50,10 +50,12 @@ function callDatabase(uri, values) {
                     resolve(data);
                 })
                 .catch(error => {
+                    window.location.href = './register.html';
                     console.error(error);
                     reject(error);
                 });
         } catch (error) {
+            window.location.href = './register.html';
             console.error(error.message);
             reject(error);
         }

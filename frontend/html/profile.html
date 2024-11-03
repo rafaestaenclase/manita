@@ -40,9 +40,7 @@
         }
 
 
-
         document.addEventListener("DOMContentLoaded", function() {
-
 
             var userId = getCookie("userId");
 
@@ -60,9 +58,6 @@
                 });
 
 
-
-
-
             callDatabase("getPostsByUserId", { userId: userId })
                 .then(response => {
                     const container = document.getElementById('container');
@@ -72,11 +67,6 @@
                         const postDiv = document.createElement('div');
                         postDiv.classList.add('post');
 
-                        // Título
-                        const titleSpan = document.createElement('span');
-                        titleSpan.textContent = post.title;
-                        postDiv.appendChild(titleSpan);
-
                         // Cuerpo del post
                         const bodyParagraph = document.createElement('p');
                         bodyParagraph.id = 'postBody';
@@ -85,6 +75,7 @@
 
                         // Ubicación
                         const neighborhoodSpan = document.createElement('span');
+                        neighborhoodSpan.id = 'neighborhoodSpan';
                         neighborhoodSpan.textContent = post.neighborhood;
                         postDiv.appendChild(neighborhoodSpan);
 
@@ -95,8 +86,32 @@
 
                         if (getCookie("userId") == post.user_id) {
                             button.textContent = "FINALIZAR";
+
+                            let isDeleted = false;
+                            button.onclick = function() {
+                                if (!isDeleted) {
+                                    button.textContent = "ELIMINAR";
+                                    button.style.backgroundColor = "red";
+                                    isDeleted = true;
+                                } else {
+                                    window.location.href = `./finishPost.html?postId=${encodeURIComponent(post.id)}`;
+                                }
+                            };
                         } else {
                             button.textContent = "CONTACTAR";
+                            button.onclick = function() {
+
+                                callDatabase("contacted", {postId: post.id})
+                                    .then(response => {
+                                        console.log(response);
+                                    })
+                                    .catch(error => {
+                                        console.log(error);
+                                    });
+
+                                const telephone = post.telephone;
+                                //window.location.href = `tel:${telephone}`;
+                            };
                         }
 
                         postDiv.appendChild(button);

@@ -29,7 +29,6 @@ CREATE TABLE users (
 CREATE TABLE posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    title VARCHAR(60) NOT NULL,
     body VARCHAR(255) NOT NULL,
     telephone INT NOT NULL,
     neighborhood VARCHAR(20),

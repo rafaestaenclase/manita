@@ -159,12 +159,6 @@ class UserController {
         }
 
     }
-
-
-
-
-
-
 }
 
 ?>

@@ -17,8 +17,10 @@ require_once './../config/database.php';
 require_once './Routing.php';
 require_once './../src/controllers/UserController.php';
 require_once './../src/controllers/PostController.php';
-require_once './../src/controllers/ProvinceController.php';
 require_once './../src/controllers/CityController.php';
+require_once './../src/controllers/UserPostContactController.php';
+
+
 
 // Decode the JSON input
 $data = json_decode(file_get_contents('php://input'), true);
@@ -50,6 +52,9 @@ if ($data !== null && isset($data["values"]) && isset($data["values"]["loggedUse
 		$router->add('getBoardPosts', 'PostController@getBoardPosts');
 		$router->add('getPostById', 'PostController@getPostById');
 		$router->add('deletePostById', 'PostController@deletePostById');
+		$router->add('contacted', 'UserPostContactController@contacted');
+		$router->add('getContactsForPostByOwner', 'UserPostContactController@getContactsForPostByOwner');
+
 	}
 
 }

@@ -8,18 +8,18 @@ class PostController {
     }
 
     public function createPost($values) {
-        foreach (['loggedUserId', 'title', 'body'] as $key) {
+        foreach (['loggedUserId', 'body', 'neighborhood', 'telephone'] as $key) {
             if (empty($values[$key])) {
                 echo json_encode(["error" => "$key is required."]);
                 return;
             }
         }
 
-        $allowedKeys = ['loggedUserId', 'title', 'body', 'neighborhood'];
+        $allowedKeys = ['loggedUserId', 'body', 'neighborhood', 'telephone'];
         $filteredValues = array_intersect_key($values, array_flip($allowedKeys));
 
-        $query = "INSERT INTO posts (user_id, title, body, neighborhood)
-                  VALUES (:loggedUserId, :title, :body, :neighborhood)";
+        $query = "INSERT INTO posts (user_id, body, neighborhood, telephone)
+                  VALUES (:loggedUserId, :body, :neighborhood, :telephone)";
 
         try {
             $stmt = $this->db->prepare($query);
@@ -38,13 +38,40 @@ class PostController {
         }
     }
 
+    public function getPostById($values) {
+        if (isset($values["postId"]) && isset($values["loggedUserId"])) {
+            $postId = $values["postId"];
+            $loggedUserId = $values["loggedUserId"];
+
+            $query = "SELECT * FROM posts WHERE id = :postId AND user_id = :loggedUserId";
+
+            try {
+                $stmt = $this->db->prepare($query);
+                $stmt->bindParam(':postId', $postId);
+                $stmt->bindParam(':loggedUserId', $loggedUserId);
+                $stmt->execute();
+
+                $post = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($post) {
+                    echo json_encode($post);
+                } else {
+                    echo json_encode(["error" => "No post found with this ID, or you are not the owner."]);
+                }
+            } catch (PDOException $e) {
+                echo json_encode(["error" => "Database error: " . $e->getMessage()]);
+            }
+        } else {
+            echo json_encode(["error" => "Post ID and logged user ID parameters are required."]);
+        }
+    }
 
     public function getPostsByUserId($values) {
 
         if (isset($values["userId"])) {
             $userId = $values["userId"];
 
-            $query = "SELECT * FROM posts WHERE user_id = :userId and active = 1";
+            $query = "SELECT * FROM posts WHERE user_id = :userId and active = 1 ORDER BY posts.created_at DESC;";
 
             try {
                 $stmt = $this->db->prepare($query);
@@ -69,7 +96,11 @@ class PostController {
         if (isset($values["loggedUserId"])) {
             $userId = $values["loggedUserId"];
 
-            $query = "SELECT posts.*, users.avatar as user_avatar, users.name as user_name FROM posts JOIN users ON posts.user_id = users.id WHERE posts.user_id != :userId AND posts.active = 1;";
+            $query = "SELECT posts.*, users.avatar as user_avatar, users.name as user_name 
+                      FROM posts 
+                      JOIN users ON posts.user_id = users.id 
+                      WHERE posts.user_id != :userId AND posts.active = 1 
+                      ORDER BY posts.created_at DESC;";
 
             try {
                 $stmt = $this->db->prepare($query);
@@ -88,39 +119,12 @@ class PostController {
         }
     }
 
-
-    public function getPostById($values) {
-        if (isset($values["postId"])) {
-            $postId = $values["postId"];
-
-            $query = "SELECT * FROM posts WHERE id = :postId";
-
-            try {
-                $stmt = $this->db->prepare($query);
-                $stmt->bindParam(':postId', $postId);
-                $stmt->execute();
-
-                $post = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                if ($post) {
-                    echo json_encode($post);
-                } else {
-                    echo json_encode(["error" => "No post found with this ID."]);
-                }
-            } catch (PDOException $e) {
-                echo json_encode(["error" => "Database error: " . $e->getMessage()]);
-            }
-        } else {
-            echo json_encode(["error" => "User ID parameter is required."]);
-        }
-    }
-
     public function deletePostById($values) {
         if (isset($values["postId"])) {
             $postId = $values["postId"];
             $loggedUserId = $values["loggedUserId"];
 
-            $query = "DELETE FROM posts WHERE id = :postId and user_Id = :userId";
+            $query = "UPDATE posts SET active = false WHERE id = :postId AND user_id = :userId";
 
             try {
                 $stmt = $this->db->prepare($query);

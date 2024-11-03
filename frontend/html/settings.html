@@ -29,37 +29,6 @@
     </script>
     <script type="text/javascript" src="./../js/default.js"></script>
     <script type="text/javascript" src="./../js/settings.js"></script>
-    <script type="text/javascript">
-        document.getElementById('getPostsByCity').addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent the default form submission behavior
-                
-                callDatabase("getPostsByUserId", getFormData(event.target))
-                    .then(response => {
-                        var resultDiv = document.getElementById('postsByUserIdResult');
-                        const posts = response.posts;
-                        const hasMore = response.hasMore;
-                        const form = document.getElementById('getPostsByUserIdForm');
-                        const page = form.querySelector('input[id="page"]');
-                        const submitButton = form.querySelector('button[type="submit"]');
-                        const postsPerPage = 4;
-
-                        for (let i = 0; i < Math.min(postsPerPage, posts.length); i++) {
-                            const post = posts[i];
-                            const postDiv = document.createElement('div');
-                            postDiv.textContent = post.title;
-                            resultDiv.appendChild(postDiv);
-                        }
-
-                        if (hasMore) {
-                            page.value = parseInt(page.value) + 1;
-                        } else {
-                            submitButton.disabled = true;
-                        }
-                    })
-                    .catch(error => {
-                        document.getElementById('postsByUserIdResult').innerText = 'Error retrieving posts: ' + error;
-                    });
-            });
-    </script>
+    <script type="text/javascript"></script>
 </body>
 </html>

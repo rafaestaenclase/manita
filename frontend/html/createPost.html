@@ -16,11 +16,6 @@
 
     <div id="container">
     	<form id="createPostForm">
-	        <span class="inputContainer">
-				<label for="title">TÍTULO</label>
-				<br>
-				<input type="text" id="title" name="title" placeholder="ESCRIBE EL TÍTULO" minlength="2" maxlength="50" required>
-			</span>
 			<span class="inputContainer">
 				<label for="body">DESCRIPCIÓN</label>
 				<br>
@@ -62,6 +57,7 @@
     		console.log(formData);
 	        callDatabase("createPost", formData)
 	            .then(response => {
+	            	
 				    const responseString = JSON.stringify(response); // Convertir response a una cadena
 					// Redirigir a profile.html con el parámetro viewPost
 					window.location.href = `./profile.html?viewPost=${encodeURIComponent(responseString)}`;
