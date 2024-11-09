@@ -76,6 +76,7 @@ body.fade-out {
 }
 
 #container {
+    width: calc(100% - 40px);
     padding: 30px 20px;
     flex-grow: 1;
     overflow-y: auto;
