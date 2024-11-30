@@ -1,3 +1,5 @@
+-- Eliminar tablas existentes si existen
+DROP TABLE IF EXISTS reports;
 DROP TABLE IF EXISTS user_post_contact;
 DROP TABLE IF EXISTS post_feedback;
 DROP TABLE IF EXISTS posts;
@@ -8,13 +10,13 @@ DROP TABLE IF EXISTS cities;
 CREATE DATABASE IF NOT EXISTS manita CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE manita;
 
--- Crear la tabla de ciudades
+-- Tabla de ciudades
 CREATE TABLE cities (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+    name VARCHAR(50) NOT NULL UNIQUE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Crear la tabla de usuarios
+-- Tabla de usuarios
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -22,41 +24,45 @@ CREATE TABLE users (
     city_id INT,
     login_hash VARCHAR(255) UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (city_id) REFERENCES cities(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Crear la tabla de posts
+-- Tabla de posts
 CREATE TABLE posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     body VARCHAR(255) NOT NULL,
-    telephone INT NOT NULL,
-    neighborhood VARCHAR(20),
+    telephone VARCHAR(15) NOT NULL,
+    neighborhood VARCHAR(50),
     active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+    helper_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (helper_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    INDEX (active) -- Índice para consultas frecuentes por posts activos
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Crear la tabla de contactos de usuario con post (quien ha pulsado algún botón de contactar en el post)
+-- Tabla de interacciones de usuario con posts
 CREATE TABLE user_post_contact (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     post_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    UNIQUE KEY unique_user_post_contact (user_id, post_id)
+    UNIQUE KEY unique_user_post_interaction (user_id, post_id)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Crear la tabla de retroalimentación de posts
-CREATE TABLE post_feedback (
+-- Tabla de reportes
+CREATE TABLE reports (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    post_id INT NOT NULL,
-    user_role ENUM('helper', 'recipient') NOT NULL,
-    valoration ENUM('good', 'bad') NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    UNIQUE KEY unique_user_post_role (user_id, post_id, user_role) -- Un usuario puede dar una valoración por rol (ayudante o receptor)
+    reporter_user_id INT NOT NULL,
+    reported_user_id INT NOT NULL,
+    commentary TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (reporter_user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (reported_user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 

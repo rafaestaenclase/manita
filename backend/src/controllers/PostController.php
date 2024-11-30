@@ -91,7 +91,6 @@ class PostController {
         
     }
 
-
     public function getBoardPosts($values) {
         if (isset($values["loggedUserId"])) {
             $userId = $values["loggedUserId"];
@@ -144,6 +143,7 @@ class PostController {
             echo json_encode(["error" => "Post ID parameter is required."]);
         }
     }
+
 
 
 }

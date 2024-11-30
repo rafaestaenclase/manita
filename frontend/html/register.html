@@ -5,6 +5,26 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<title></title>
+	<style type="text/css">
+		#step1 {
+			z-index: 2;
+		}
+
+		.step {
+			position: absolute;
+			width: 100vw;
+			height: 100vh;
+			background: white;
+			top: 0;
+			left: 0;
+			display: flex;
+			flex-direction: column;
+		}
+
+		#cityContainer {
+			overflow: scroll;
+		}
+	</style>
 </head>
 <body>
 	<div id="header" class="backgroundGreen">
@@ -15,17 +35,32 @@
 
 
 	<div id="container">
+
+		<div id="step1" class="step">
+			<div id="header" class="backgroundGreen">
+				<span class="greeting">
+					<h1>¿CÓMO TE LLAMAS?</h1>
+				</span>
+			</div>
+			<div class="container">
+				<input type="text" id="name" name="name" placeholder="NOMBRE Y APELLIDO" minlength="5" maxlength="20" focus onblur="this.focus()" required>
+			</div>
+			
+		</div>
+
+		<div id="step2" class="step">
+			<div id="header" class="backgroundGreen">
+				<span class="greeting">
+					<h1>SELECCIONA TU CIUDAD</h1>
+				</span>
+			</div>
+			<div id="cityContainer" class="container"></div>
+		</div>
+
+
 		<form id="createUserForm">
-			<label for="name">¿CÓMO TE LLAMAS?</label>
-			<br>
-			<input type="text" id="name" name="name" placeholder="NOMBRE Y APELLIDO" minlength="2" maxlength="50" required>
-
-			<label for="name">¿DE DONDE ERES?</label>
-			<br>
-			<input type="text" id="city" name="city" placeholder="CIUDAD" minlength="2" maxlength="50" required onchange="getCityByName()">
+			<input type="text" id="name" name="name" placeholder="NOMBRE Y APELLIDO" minlength="2" maxlength="15" required>
 			<input type="text" id="cityId" name="cityId" required class="hidden">
-
-			<br>
 			<input type="text" id="avatar" name="avatar" value="SUBIR FOTO" minlength="2" maxlength="50">
 			<input type="submit" id="createUserSubmit" class="invisible" value="submit">
 		</form>
@@ -33,12 +68,20 @@
 
 
 	<div id="nav">
-		<button id="backButton" class="invisible">ATRÁS</button>
-		<button id="register">REGISTRAR</button>
+		<button id="backButton" class="invisible">&#129190;</button>
+		<button id="register">&#129191;</button>
 	</div>
 	<script type="text/javascript" src="./../js/databaseConfig.js"></script>
 	<script type="text/javascript" src="./../js/default.js"></script>
 	<script type="text/javascript">
+
+		document.getElementById('name').focus();
+
+		const nameInput = document.getElementById('name');
+		nameInput.focus();
+		nameInput.addEventListener('blur', () => {
+		    nameInput.focus();
+		});
 
 
 		function login(response) {
@@ -51,7 +94,7 @@
         	}
 		}
 
-
+		//Check if is loged
 		document.addEventListener("DOMContentLoaded", function() {
 			var userIdCookie = getCookie("userId");
 			var loginHashCookie = getCookie("loginHash");
@@ -65,27 +108,6 @@
 	                });
     		}
 		});
-
-
-
-		function getCityByName(){
-			const cityInput = document.getElementById('city');
-			const cityIdInput = document.getElementById('cityId');
-
-		    callDatabase("getCityByName", { cityName: cityInput.value })
-		        .then(response => {
-		        	console.log(response);
-		            if (response && Array.isArray(response)) {
-		                cityInput.value = response[0]["name"];
-		                cityIdInput.value = response[0]["id"];
-		            }
-		        })
-		        .catch(error => {
-		            console.log(error);
-		        });
-		}
-
-
 
         //createUser
         document.getElementById('createUserForm').addEventListener('submit', function(event) {
@@ -102,8 +124,53 @@
         	if (checkAllInputs()) {
     			document.getElementById('createUserSubmit').click();
         	}
-
         });
+
+
+		function getAllCities(){
+		    callDatabase("getAllCities", {})
+		        .then(response => {
+		        	console.log(response);
+		        	const container = document.getElementById('cityContainer');
+		        	const cityIdInput = document.getElementById('cityId');
+
+
+	                if (response.length > 0) {
+	                    response.forEach(city => {
+	                        // Creamos el div del post
+	                        const cityDiv = document.createElement('div');
+	                        cityDiv.classList.add('post');
+
+	                        const cityNameSpan = document.createElement('span');
+	                        cityNameSpan.textContent = city.name.toUpperCase();
+	                        cityDiv.appendChild(cityNameSpan);
+
+	                        cityDiv.onclick = function() {
+							    cityIdInput.textContent = city.id;
+							    closeCitiesList();
+							};
+
+	                        container.appendChild(cityDiv);
+
+			        })
+			    }
+			});
+	    }
+
+
+		getAllCities();
+
+		
+		var citiesList = document.getElementById('citiesList');
+
+		function citiesList() {
+
+		}
+
+		function closeCitiesList() {
+			citiesList.style.visibility = "hidden";
+		}
+
 
 	</script>
 </body>

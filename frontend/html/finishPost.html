@@ -73,6 +73,11 @@
                         const postDiv = document.createElement('div');
                         postDiv.classList.add('post');
 
+                        // Div del id del usuario
+                        const userId = document.createElement('p');
+                        userId.id = 'userId';
+                        userId.textContent = contact.id;
+                        userId.style.display = 'none';
 
                         // Div del botón del usuario
                         const userButtonDiv = document.createElement('div');
@@ -101,6 +106,7 @@
                         // Boton texto
                         const textValoration = document.createElement('p');
                         textValoration.textContent = "¿COMO FUÉ LA AYUDA?";
+                        textValoration.style.width = "100%";
                         valorationSpan.appendChild(textValoration);
                         valorationSpan.appendChild(document.createElement('br'));
 
@@ -110,16 +116,24 @@
                         goodValorationButton.classList.add('goodValorationButton', 'greenButton');
                         goodValorationButton.textContent = "BIEN";
                         valorationSpan.appendChild(goodValorationButton);
+                        goodValorationButton.onclick = function () {
+                            valoratePost("good"); // Llama a la función con parámetros necesarios
+                        };
 
                         // Boton Mal
                         const badValorationButton = document.createElement('button');
                         badValorationButton.classList.add('badValorationButton', 'redButton');
                         badValorationButton.textContent = "MAL";
                         valorationSpan.appendChild(badValorationButton);
+                        badValorationButton.onclick = function () {
+                            valoratePost("bad"); // Llama a la función con parámetros necesarios
+                        };
 
+                        console.log(contact);
 
 
                         // Agregar userButton al post
+                        postDiv.appendChild(userId);
                         postDiv.appendChild(userButtonDiv);
 
                         postDiv.appendChild(valorationSpan);
@@ -136,6 +150,31 @@
             .catch(error => {
                 console.log('Error creating user: ' + error);
         });
+
+
+        function valoratePost(valoration) {
+            document.addEventListener("DOMContentLoaded", function() {
+                const userIdValue = document.getElementById('userId').textContent;
+
+                // Obtener el postId de la URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const postId = urlParams.get('postId'); // Cambia 'postId' según el parámetro real en tu URL
+
+                // Verifica que postId no sea null
+                if (!postId) {
+                    console.error("No se pudo obtener el postId de la URL");
+                    return;
+                }
+
+                callDatabase("postFeedback", { helperUserId: userIdValue, postId: postId, valoration: valoration })
+                    .then(response => {
+                        console.log(response);
+                    })
+                    .catch(error => {
+                        console.error('Error creating user: ' + error);
+                    });
+            });
+        }
 
 
     });

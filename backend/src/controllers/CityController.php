@@ -7,17 +7,12 @@ class CityController {
         $this->db = $db;
     }
 
-    public function getCityByName($values) {
+    public function getAllCities() {
 
-        if (strlen($values["cityName"]) > 4) {
-        
-            $cityName = '%' . $values["cityName"] . '%'; // Asegurarse de usar comodines % para permitir coincidencias aproximadas
-
-            $query = "SELECT * FROM cities WHERE name LIKE :cityName";
+            $query = "SELECT * FROM cities";
 
             try {
                 $stmt = $this->db->prepare($query);
-                $stmt->bindParam(':cityName', $cityName, PDO::PARAM_STR);
                 $stmt->execute();
 
                 $cities = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -31,9 +26,6 @@ class CityController {
             } catch (PDOException $e) {
                 echo json_encode(["error" => "Database error: " . $e->getMessage()]);
             }
-        } else {
-            echo json_encode(false); 
-        }
     }
 }
 

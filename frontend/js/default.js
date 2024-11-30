@@ -106,18 +106,3 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-
-
-//FONT SIZE
-document.addEventListener("DOMContentLoaded", function() {
-    loadFontSize();
-});
-
-
- function loadFontSize() {
-    let fontSize = parseInt(getCookie('fontSize')) || 28;
-    
-    document.querySelectorAll('*').forEach(element => {
-        element.style.fontSize = fontSize + 'px';
-    });
- }

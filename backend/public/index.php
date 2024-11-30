@@ -35,7 +35,7 @@ $router->add('/', function() {
 // Make sure the class name matches the controller file
 $router->add('createUser', 'UserController@createUser');
 $router->add('login', 'UserController@login');
-$router->add('getCityByName', 'CityController@getCityByName');
+$router->add('getAllCities', 'CityController@getAllCities');
 
 
 //Secured action. Loggined needed.
@@ -52,8 +52,10 @@ if ($data !== null && isset($data["values"]) && isset($data["values"]["loggedUse
 		$router->add('getBoardPosts', 'PostController@getBoardPosts');
 		$router->add('getPostById', 'PostController@getPostById');
 		$router->add('deletePostById', 'PostController@deletePostById');
+		$router->add('postFeedback', 'PostController@postFeedback');
 		$router->add('contacted', 'UserPostContactController@contacted');
 		$router->add('getContactsForPostByOwner', 'UserPostContactController@getContactsForPostByOwner');
+
 
 	}
 
