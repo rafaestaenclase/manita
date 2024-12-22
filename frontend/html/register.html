@@ -3,7 +3,7 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="./../css/default.css" />
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<title></title>
 	<style type="text/css">
 		#step1 {
@@ -13,7 +13,6 @@
 		.step {
 			position: absolute;
 			width: 100vw;
-			height: 100vh;
 			background: white;
 			top: 0;
 			left: 0;
@@ -24,53 +23,128 @@
 		#cityContainer {
 			overflow: scroll;
 		}
+
+
+
+	    #inputField {
+	      width: 90%;
+	      max-width: 400px;
+	      padding: 10px;
+	      font-size: 18px;
+	      margin-bottom: 20px;
+	      border: 1px solid #ccc;
+	      border-radius: 4px;
+	    }
+
+	    .keyboard {
+	      display: grid;
+	      grid-template-columns: repeat(10, 1fr);
+	      gap: 5px;
+	      width: 100%;
+          z-index: 20;
+          position: absolute;
+          bottom: 10px;
+          background: white;
+	    }
+
+	    .key {
+	    	width: auto !important;
+	    	height: 35px !important;
+	    	margin-bottom: 5px !important;
+	      text-align: center;
+	      background-color: #fff;
+	      border: 1px solid #ccc;
+	      border-radius: 4px;
+	      font-size: 25px;
+	      cursor: pointer;
+	      user-select: none;
+	      overflow: hidden;
+
+    		display: flex;
+		    justify-content: space-around;
+		    flex-wrap: nowrap;
+		    align-items: center;
+}
+	    }
+
+	    .key:active {
+    box-shadow: auto !important; /* Sombra inferior más pequeña */
+    transform: none !important; /* Desplazar el botón hacia abajo */
+}
+
+	    .key:hover {
+	      background-color: #e0e0e0;
+	    }
+
+	    /* Barra de espacio */
+.space {
+  grid-column: span 10; /* Ocupa 5 columnas */
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 25px;
+}
+
+/* Botón de borrar */
+.delete {
+  grid-column: span 2; /* Ocupa 2 columnas */
+  background-color: #ffcccc;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 25px;
+}
+
+/* Tecla de espacio */
+.space:hover, .delete:hover {
+  background-color: #e0e0e0;
+}
+
+
 	</style>
 </head>
 <body>
-	<div id="header" class="backgroundGreen">
-		<span class="greeting">
-			<h1>¡HOLA! :)</h1>
-		</span>
+
+	<div id="step1" class="step">
+		<div id="header" class="backgroundGreen">
+			<span class="greeting">
+				<h1>¡HOLA!</h1>
+			</span>
+		</div>
+		<div id="container">
+			<input type="text" id="name" name="name" placeholder="NOMBRE Y APELLIDO" minlength="5" maxlength="20" focus onblur="this.focus()" autocomplete="off" 
+      		oncontextmenu="return false" readonly required>
+		</div>
+		
 	</div>
 
-
-	<div id="container">
-
-		<div id="step1" class="step">
-			<div id="header" class="backgroundGreen">
-				<span class="greeting">
-					<h1>¿CÓMO TE LLAMAS?</h1>
-				</span>
-			</div>
-			<div class="container">
-				<input type="text" id="name" name="name" placeholder="NOMBRE Y APELLIDO" minlength="5" maxlength="20" focus onblur="this.focus()" required>
-			</div>
-			
+	<div id="step2" class="step">
+		<div id="header" class="backgroundGreen">
+			<span class="greeting">
+				<h1>SELECCIONA TU CIUDAD</h1>
+			</span>
 		</div>
-
-		<div id="step2" class="step">
-			<div id="header" class="backgroundGreen">
-				<span class="greeting">
-					<h1>SELECCIONA TU CIUDAD</h1>
-				</span>
-			</div>
-			<div id="cityContainer" class="container"></div>
-		</div>
-
-
-		<form id="createUserForm">
-			<input type="text" id="name" name="name" placeholder="NOMBRE Y APELLIDO" minlength="2" maxlength="15" required>
-			<input type="text" id="cityId" name="cityId" required class="hidden">
-			<input type="text" id="avatar" name="avatar" value="SUBIR FOTO" minlength="2" maxlength="50">
-			<input type="submit" id="createUserSubmit" class="invisible" value="submit">
-		</form>
+		<div id="cityContainer" id="container"></div>
 	</div>
 
+<!--
+	<form id="createUserForm">
+		<input type="text" id="name" name="name" placeholder="NOMBRE Y APELLIDO" minlength="2" maxlength="15" required>
+		<input type="text" id="cityId" name="cityId" required class="hidden">
+		<input type="text" id="avatar" name="avatar" value="SUBIR FOTO" minlength="2" maxlength="50">
+		<input type="submit" id="createUserSubmit" class="invisible" value="submit">
+	</form>
+-->
 
 	<div id="nav">
 		<button id="backButton" class="invisible">&#129190;</button>
-		<button id="register">&#129191;</button>
+		<button id="register">next</button>
 	</div>
+
+	<div class="keyboard" id="keyboard"></div>
 	<script type="text/javascript" src="./../js/databaseConfig.js"></script>
 	<script type="text/javascript" src="./../js/default.js"></script>
 	<script type="text/javascript">
@@ -110,6 +184,7 @@
 		});
 
         //createUser
+        /*
         document.getElementById('createUserForm').addEventListener('submit', function(event) {
             callDatabase("createUser", getFormData(event.target))
                 .then(response => {
@@ -118,7 +193,7 @@
                 .catch(error => {
                 	console.log('Error creating user: ' + error);
                 });
-        });
+        });*/
 
         document.getElementById('register').addEventListener('click', function(event) {
         	if (checkAllInputs()) {
@@ -158,19 +233,81 @@
 	    }
 
 
-		getAllCities();
+		//getAllCities();
 
-		
-		var citiesList = document.getElementById('citiesList');
+const spanishLetters = [
+  'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',
+  'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ñ',
+  '-', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<-',
+  ' '
+];
 
-		function citiesList() {
+const keyboardContainer = document.getElementById('keyboard');
+const outputField = document.getElementById('name');
 
-		}
+// Variable para controlar la frecuencia de actualización
+let isUpdating = false;
 
-		function closeCitiesList() {
-			citiesList.style.visibility = "hidden";
-		}
+// Función para agregar letras al teclado
+function createKeyboard() {
+  const fragment = document.createDocumentFragment(); // Usar un fragmento para reducir reflows
 
+  spanishLetters.forEach(letter => {
+    const button = document.createElement('button');
+    button.classList.add('key');
+
+    // Si el valor está vacío, lo tratamos como un espacio
+    if (letter === ' ') {
+      button.classList.add('space');
+      button.textContent = 'Espacio';
+    } else if (letter === '<-') {
+      button.classList.add('delete');
+      button.textContent = 'Borrar';
+    } else {
+      button.textContent = letter;
+    }
+
+    // Añadir el evento click a todos los botones de una vez
+    button.addEventListener('click', handleKeyPress);
+
+    fragment.appendChild(button);
+  });
+
+  // Añadir el fragmento al DOM de una vez
+  keyboardContainer.appendChild(fragment);
+}
+
+// Función para manejar la pulsación de teclas
+function handleKeyPress(event) {
+  const letter = event.target.textContent;
+
+  if (!isUpdating) {
+    isUpdating = true;
+    requestAnimationFrame(() => {
+      if (letter === 'Borrar') {
+        deleteLastCharacter();
+      } else if (letter === 'Espacio') {
+        addLetter(' ');
+      } else {
+        addLetter(letter);
+      }
+      isUpdating = false;
+    });
+  }
+}
+
+// Función para añadir una letra al campo de texto
+function addLetter(letter) {
+  outputField.value += letter;
+}
+
+// Función para borrar el último carácter
+function deleteLastCharacter() {
+  outputField.value = outputField.value.slice(0, -1);
+}
+
+// Crear el teclado al cargar la página
+createKeyboard();
 
 	</script>
 </body>
