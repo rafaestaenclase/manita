@@ -4,49 +4,6 @@ const inputs = document.querySelectorAll('input, textarea');
 const header = document.getElementById('header');
 const container = document.getElementById('container');
 
-//FOCUS
-
-inputs.forEach(input => {
-	input.addEventListener('focus', (event) => {
-		inputContainers.forEach(inputContainer => {
-			if (!inputContainer.contains(event.target)) {
-				inputContainer.classList.add('hidden');
-			} else {
-				event.target.classList.remove('error');
-			}
-		});
-		header.classList.add('hidden');
-			container.style.flexGrow = 0;
-	});
-
-	input.addEventListener('blur', () => {
-        inputContainers.forEach(inputContainer => {
-            inputContainer.classList.remove('hidden');
-        });
-        header.classList.remove('hidden');
-        container.style.flexGrow = 1;
-	});
-
-});
-
-
-function checkAllInputs() {
-    const inputs = document.querySelectorAll('input, textarea');
-    let allInputsFilled = true;
-
-    inputs.forEach(input => {
-    	input.classList.remove('error');
-    	void input.offsetWidth;
-        if (!input.value.trim()) {
-            input.classList.add('error');
-            allInputsFilled = false;
-        }
-    });
-
-    console.log(allInputsFilled ? 'All inputs are filled.' : 'Some inputs are empty.');
-    return allInputsFilled;
-}
-
 
 
 //FADEOUT NAVEGATION

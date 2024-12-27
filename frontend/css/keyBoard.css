@@ -1,0 +1,72 @@
+	  .keyboard {
+	    display: grid;
+	    grid-template-columns: repeat(10, 1fr);
+	    width: calc(100% - 10px);
+	    margin: 0% 5px;
+	      z-index: 20;
+	      position: absolute;
+	      bottom: 10px;
+	      background: white;
+	  }
+
+	  .key {
+	  	width: auto !important;
+	  	height: 40px !important;
+	  	margin-bottom: 5px !important;
+	    text-align: center;
+	    background-color: #fff;
+	    
+	    cursor: pointer;
+	    user-select: none;
+	    overflow: hidden;
+
+			display: flex;
+	    justify-content: space-around;
+	    flex-wrap: nowrap;
+	    align-items: center;
+		}
+
+		.keyLetter {
+	    width: calc(100% - 8px);
+	    height: calc(100% - 8px);
+	    border: 1px solid #ccc;
+	    border-radius: 4px;
+	    font-size: 25px;
+		}
+	  
+
+	  .keyLetter:active {
+			box-shadow: auto !important; /* Sombra inferior más pequeña */
+			transform: none !important; /* Desplazar el botón hacia abajo */
+		}
+
+	  .keyLetter:hover {
+	    background-color: #e0e0e0;
+	  }
+
+    /* Barra de espacio */
+		.space {
+		  grid-column: span 10; /* Ocupa 5 columnas */
+		  background-color: #f0f0f0;
+		  border: 1px solid #ccc;
+		  border-radius: 4px;
+		  cursor: pointer;
+		  text-align: center;
+		  font-size: 25px;
+		}
+
+		/* Botón de borrar */
+		.delete {
+		  grid-column: span 2; /* Ocupa 2 columnas */
+		  background-color: #ffcccc;
+		  border: 1px solid #ccc;
+		  border-radius: 4px;
+		  cursor: pointer;
+		  text-align: center;
+		  font-size: 25px;
+		}
+
+		/* Tecla de espacio */
+		.space:hover, .delete:hover {
+		  background-color: #e0e0e0;
+		}

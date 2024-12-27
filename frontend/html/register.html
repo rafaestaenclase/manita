@@ -2,6 +2,7 @@
 <html>
 <head>
 	<link rel="stylesheet" type="text/css" href="./../css/default.css" />
+	<link rel="stylesheet" type="text/css" href="./../css/keyBoard.css" />
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<title></title>
@@ -24,84 +25,6 @@
 			overflow: scroll;
 		}
 
-
-
-	    #inputField {
-	      width: 90%;
-	      max-width: 400px;
-	      padding: 10px;
-	      font-size: 18px;
-	      margin-bottom: 20px;
-	      border: 1px solid #ccc;
-	      border-radius: 4px;
-	    }
-
-	    .keyboard {
-	      display: grid;
-	      grid-template-columns: repeat(10, 1fr);
-	      gap: 5px;
-	      width: 100%;
-          z-index: 20;
-          position: absolute;
-          bottom: 10px;
-          background: white;
-	    }
-
-	    .key {
-	    	width: auto !important;
-	    	height: 35px !important;
-	    	margin-bottom: 5px !important;
-	      text-align: center;
-	      background-color: #fff;
-	      border: 1px solid #ccc;
-	      border-radius: 4px;
-	      font-size: 25px;
-	      cursor: pointer;
-	      user-select: none;
-	      overflow: hidden;
-
-    		display: flex;
-		    justify-content: space-around;
-		    flex-wrap: nowrap;
-		    align-items: center;
-}
-	    }
-
-	    .key:active {
-    box-shadow: auto !important; /* Sombra inferior más pequeña */
-    transform: none !important; /* Desplazar el botón hacia abajo */
-}
-
-	    .key:hover {
-	      background-color: #e0e0e0;
-	    }
-
-	    /* Barra de espacio */
-.space {
-  grid-column: span 10; /* Ocupa 5 columnas */
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: center;
-  font-size: 25px;
-}
-
-/* Botón de borrar */
-.delete {
-  grid-column: span 2; /* Ocupa 2 columnas */
-  background-color: #ffcccc;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: center;
-  font-size: 25px;
-}
-
-/* Tecla de espacio */
-.space:hover, .delete:hover {
-  background-color: #e0e0e0;
-}
 
 
 	</style>
@@ -147,15 +70,8 @@
 	<div class="keyboard" id="keyboard"></div>
 	<script type="text/javascript" src="./../js/databaseConfig.js"></script>
 	<script type="text/javascript" src="./../js/default.js"></script>
+	<script type="text/javascript" src="./../js/keyboard.js"></script>
 	<script type="text/javascript">
-
-		document.getElementById('name').focus();
-
-		const nameInput = document.getElementById('name');
-		nameInput.focus();
-		nameInput.addEventListener('blur', () => {
-		    nameInput.focus();
-		});
 
 
 		function login(response) {
@@ -197,7 +113,7 @@
 
         document.getElementById('register').addEventListener('click', function(event) {
         	if (checkAllInputs()) {
-    			document.getElementById('createUserSubmit').click();
+    				//document.getElementById('createUserSubmit').click();
         	}
         });
 
@@ -225,7 +141,7 @@
 							    closeCitiesList();
 							};
 
-	                        container.appendChild(cityDiv);
+	              container.appendChild(cityDiv);
 
 			        })
 			    }
@@ -235,80 +151,7 @@
 
 		//getAllCities();
 
-const spanishLetters = [
-  'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',
-  'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ñ',
-  '-', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<-',
-  ' '
-];
-
-const keyboardContainer = document.getElementById('keyboard');
-const outputField = document.getElementById('name');
-
-// Variable para controlar la frecuencia de actualización
-let isUpdating = false;
-
-// Función para agregar letras al teclado
-function createKeyboard() {
-  const fragment = document.createDocumentFragment(); // Usar un fragmento para reducir reflows
-
-  spanishLetters.forEach(letter => {
-    const button = document.createElement('button');
-    button.classList.add('key');
-
-    // Si el valor está vacío, lo tratamos como un espacio
-    if (letter === ' ') {
-      button.classList.add('space');
-      button.textContent = 'Espacio';
-    } else if (letter === '<-') {
-      button.classList.add('delete');
-      button.textContent = 'Borrar';
-    } else {
-      button.textContent = letter;
-    }
-
-    // Añadir el evento click a todos los botones de una vez
-    button.addEventListener('click', handleKeyPress);
-
-    fragment.appendChild(button);
-  });
-
-  // Añadir el fragmento al DOM de una vez
-  keyboardContainer.appendChild(fragment);
-}
-
-// Función para manejar la pulsación de teclas
-function handleKeyPress(event) {
-  const letter = event.target.textContent;
-
-  if (!isUpdating) {
-    isUpdating = true;
-    requestAnimationFrame(() => {
-      if (letter === 'Borrar') {
-        deleteLastCharacter();
-      } else if (letter === 'Espacio') {
-        addLetter(' ');
-      } else {
-        addLetter(letter);
-      }
-      isUpdating = false;
-    });
-  }
-}
-
-// Función para añadir una letra al campo de texto
-function addLetter(letter) {
-  outputField.value += letter;
-}
-
-// Función para borrar el último carácter
-function deleteLastCharacter() {
-  outputField.value = outputField.value.slice(0, -1);
-}
-
-// Crear el teclado al cargar la página
-createKeyboard();
-
+		createKeyboard(document.getElementById('keyboard'), document.getElementById('name'))
 	</script>
 </body>
 </html>
