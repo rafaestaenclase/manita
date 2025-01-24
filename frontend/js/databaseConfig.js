@@ -50,7 +50,7 @@ function callDatabase(uri, values) {
                     resolve(data);
                 })
                 .catch(error => {
-                    window.location.href = './register.html';
+                    //window.location.href = './register.html';
                     console.error(error);
                     reject(error);
                 });

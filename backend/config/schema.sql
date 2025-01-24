@@ -19,7 +19,7 @@ CREATE TABLE cities (
 -- Tabla de usuarios
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
+    name VARCHAR(50) NOT NULL CHECK (LENGTH(name) >= 8),
     avatar VARCHAR(255),
     city_id INT,
     login_hash VARCHAR(255) UNIQUE,

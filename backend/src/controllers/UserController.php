@@ -13,13 +13,11 @@ class UserController {
         $loginHash = bin2hex(random_bytes(32));
 
         // Query SQL para la inserción
-        $query = "INSERT INTO users (name, city_id, avatar, login_hash) VALUES (:name, :cityId, :avatar, :loginHash)";
+        $query = "INSERT INTO users (name, login_hash) VALUES (:name, :loginHash)";
 
         // Preparar y ejecutar la consulta
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':name', $values["name"]);
-        $stmt->bindParam(':cityId', $values["cityId"]);
-        $stmt->bindParam(':avatar', $values["avatar"]);
         $stmt->bindParam(':loginHash', $loginHash);
         $stmt->execute();
 

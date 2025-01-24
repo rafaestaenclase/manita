@@ -95,28 +95,48 @@ class PostController {
         if (isset($values["loggedUserId"])) {
             $userId = $values["loggedUserId"];
 
-            $query = "SELECT posts.*, users.avatar as user_avatar, users.name as user_name 
-                      FROM posts 
-                      JOIN users ON posts.user_id = users.id 
-                      WHERE posts.user_id != :userId AND posts.active = 1 
-                      ORDER BY posts.created_at DESC;";
-
+            // Subconsulta para verificar si el usuario tiene una ciudad asignada
+            $cityQuery = "SELECT city_id FROM users WHERE id = :userId";
+            
             try {
+                $cityStmt = $this->db->prepare($cityQuery);
+                $cityStmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+                $cityStmt->execute();
+                
+                $cityId = $cityStmt->fetchColumn();
+                
+                if (!$cityId) {
+                    throw new Exception("The user does not have a city assigned.");
+                }
+
+                // Consulta principal para obtener los posts
+                $query = "SELECT posts.*, users.avatar as user_avatar, users.name as user_name 
+                          FROM posts 
+                          JOIN users ON posts.user_id = users.id 
+                          WHERE posts.user_id != :userId 
+                          AND posts.active = 1 
+                          AND users.city_id = :cityId
+                          ORDER BY posts.created_at DESC;";
+                
                 $stmt = $this->db->prepare($query);
-                $stmt->bindParam(':userId', $userId);
+                $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+                $stmt->bindParam(':cityId', $cityId, PDO::PARAM_INT);
                 $stmt->execute();
 
                 $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                // Return the posts and indication if there are more available
+                // Retornar los posts en formato JSON
                 echo json_encode(["posts" => $posts]);
             } catch (PDOException $e) {
                 echo json_encode(["error" => "Database error: " . $e->getMessage()]);
+            } catch (Exception $e) {
+                echo json_encode(["error" => $e->getMessage()]);
             }
         } else {
             echo json_encode(["error" => "User ID parameter is required."]);
         }
     }
+
 
     public function deletePostById($values) {
         if (isset($values["postId"])) {
